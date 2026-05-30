@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "codecosmos-userpages"
+  },
+  "targets": {
+    "codecosmos-userpages": {
+      "hosting": {
+        "bowies-site-target": [
+          "bowie-ccpages"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

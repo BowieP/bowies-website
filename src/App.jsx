@@ -3,6 +3,7 @@ import React from 'react';
 // --- Cursor Constants ---
 const PIXEL_HAND = 'url("https://unpkg.com/nes.css@latest/assets/cursor-click.png"), pointer';
 const PIXEL_ARROW = 'url("https://unpkg.com/nes.css@latest/assets/cursor-pointer.png"), auto';
+const COMIC_FONT = '"Comic Neue", "Chalkboard SE", "Comic Sans MS", "Comic Sans", cursive';
 
 // --- Shared InfoBubble Component ---
 const InfoBubble = ({ isVisible, children, isMobile, colors, top = '30px', side = 'right', width = '400px', style = {} }) => {
@@ -87,7 +88,9 @@ const HeaderBrandingSnippet = ({ isMobile, colors, isDark }) => {
         >
           <a href="https://codecosmos.net" style={grayscaleHeaderItem}>
             <img src="https://kidvids.codecosmos.net/logo2.png" alt="Logo" style={{ height: '20px', marginRight: '10px' }} />
-            <span style={{ fontWeight: 500 }}>Hosted through Code Cosmos Pages</span>
+            <span style={{ fontWeight: 500 }}>
+              {isMobile ? "Pages" : "Hosted through Code Cosmos Pages"}
+            </span>
           </a>
           <InfoBubble isVisible={codeCosmosHover} side="left" isMobile={isMobile} colors={colors}>
             <p style={{ margin: '0 0 8px 0' }}>Code Cosmos is a network of apps and websites, some connecting to each other, some not. Users sign in to access a variety of services, similar to Google or Apple.</p>
@@ -101,7 +104,9 @@ const HeaderBrandingSnippet = ({ isMobile, colors, isDark }) => {
           onMouseLeave={() => setFounderHover(false)}
           style={{ position: 'relative', display: 'flex', alignItems: 'center' }}
         >
-          <span style={{ ...grayscaleHeaderItem, fontWeight: 500 }}>Founder's Site</span>
+          <span style={{ ...grayscaleHeaderItem, fontWeight: 500 }}>
+            {isMobile ? "Founder" : "Founder's Site"}
+          </span>
           <InfoBubble isVisible={founderHover} side="left" isMobile={isMobile} colors={colors} width="300px">
             <p style={{ margin: 0 }}>This website is Bowie's, the creator of Code Cosmos, personal website showcasing his personality and hobbies.</p>
           </InfoBubble>
@@ -185,17 +190,18 @@ const App = () => {
     <div style={{
       backgroundColor: colors.bg,
       color: colors.text,
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
+      minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-      overflow: 'hidden',
+      fontFamily: COMIC_FONT,
+      overflowX: 'hidden',
+      overflowY: 'auto',
       cursor: PIXEL_HAND
     }}>
+      <style>
+        {`@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');`}
+      </style>
+
       {/* Tiny Header */}
       <HeaderBrandingSnippet 
         isMobile={isMobile} 
@@ -210,8 +216,7 @@ const App = () => {
         alignItems: 'center',
         padding: isMobile ? '0 12px' : '0 24px',
         borderBottom: `1px solid ${colors.border}`,
-        backgroundColor: colors.bg,
-        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+        backgroundColor: colors.bg
       }}>
         <img 
           src="/favicon.jpeg" 
@@ -241,9 +246,9 @@ const App = () => {
             alignItems: 'center',
             justifyContent: 'center',
             width: '100%',
-            maxWidth: '1200px',
-            gap: isMobile ? '40px' : '80px',
-            fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+            maxWidth: isMobile ? '100%' : '1000px',
+            gap: isMobile ? '30px' : '80px',
+            padding: isMobile ? '20px' : '0',
           }}>
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px', textAlign: isMobile ? 'center' : 'left' }}>
               <button
@@ -258,7 +263,6 @@ const App = () => {
                   border: '4px solid rgba(255,255,255,0.3)',
                   borderRadius: '40px 15px 35px 20px',
                   cursor: PIXEL_HAND,
-                  fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                   boxShadow: '0 8px 15px rgba(0,0,0,0.2)',
                   transition: 'all 0.2s',
                   outline: 'none'
@@ -269,7 +273,7 @@ const App = () => {
                 Back
               </button>
 
-              <div style={{ fontSize: '20px', lineHeight: '1.6' }}>
+              <div style={{ fontSize: '20px', lineHeight: '1.6', overflowWrap: 'anywhere' }}>
                 <h2 style={{ fontSize: '32px', color: 'blue', marginTop: 0, marginBottom: '20px' }}>
                   Hello! I am Bowie and my favorite hobbies are:
                 </h2>
@@ -286,8 +290,216 @@ const App = () => {
               src="https://cdn-icons-png.flaticon.com/512/10472/10472903.png" 
               alt="Hobbies Menu Icon" 
               style={{ 
-                height: isMobile ? '180px' : '400px', 
+                height: 'auto',
+                maxHeight: isMobile ? '200px' : '400px',
+                maxWidth: isMobile ? '80%' : '100%',
                 transform: 'rotate(12deg)',
+                filter: 'drop-shadow(10px 10px 0px rgba(0,0,0,0.05))'
+              }} 
+            />
+          </div>
+        ) : currentPath === '/gamesandtv' ? (
+          <div style={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            maxWidth: isMobile ? '100%' : '1000px',
+            gap: isMobile ? '30px' : '80px',
+            padding: isMobile ? '20px' : '0',
+            fontFamily: COMIC_FONT,
+          }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px', textAlign: isMobile ? 'center' : 'left' }}>
+              <button
+                onClick={() => navigate('/')}
+                style={{
+                  alignSelf: isMobile ? 'center' : 'flex-start',
+                  padding: '10px 30px',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  color: '#fff',
+                  backgroundColor: '#555',
+                  border: '4px solid rgba(255,255,255,0.3)',
+                  borderRadius: '40px 15px 35px 20px',
+                  cursor: PIXEL_HAND,
+                  boxShadow: '0 8px 15px rgba(0,0,0,0.2)',
+                  transition: 'all 0.2s',
+                  outline: 'none'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1) rotate(-2deg)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1) rotate(0deg)'}
+              >
+                Back
+              </button>
+
+              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
+                <img 
+                  src="https://upload.wikimedia.org/wikinews/en/7/7a/Minecraft_game_cover.jpeg?utm_source=en.wikinews.org&utm_campaign=index&utm_content=original" 
+                  alt="Minecraft" 
+                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
+                />
+                <p style={{ margin: 0 }}>
+                  <strong>Minecraft</strong> - I love playing this game because i think its fun and blocky!
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
+                <img 
+                  src="https://gamegeneral.de/wp-content/uploads/2021/11/Mario-Kart-8-Deluxe-Thumbnail.jpg" 
+                  alt="Mario Kart" 
+                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
+                />
+                <p style={{ margin: 0 }}>
+                  <strong>Mario Kart</strong> - I like this game because you can drive across tons of tracks!
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
+                <img 
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOi2K4344dLe_LRseE3HaN8NN5AnNNZX2H3Q&s" 
+                  alt="The Emoji Movie" 
+                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
+                />
+                <p style={{ margin: 0 }}>
+                  <strong>The Emoji Movie</strong> - I like this film because it fits the tech aesthetic and is about emojis and hacking!
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
+                <img 
+                  src="https://upload.wikimedia.org/wikipedia/en/6/63/Worms_Rumble_cover_art.jpg" 
+                  alt="Worms Rumble" 
+                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
+                />
+                <p style={{ margin: 0 }}>
+                  <strong>Worms Rumble</strong> - I like this game, it's a shooter but it's for kids and it's about worms!
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
+                <img 
+                  src="https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/dbe22eba-5cb6-4c1d-b5d2-ca1a12830131/compose?aspectRatio=1.78&format=webp&width=1200" 
+                  alt="Wreck-It Ralph" 
+                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
+                />
+                <p style={{ margin: 0 }}>
+                  <strong>Wreck-It Ralph Breaks the Internet</strong> - I like this movie because it's about the internet and games!
+                </p>
+              </div>
+            </div>
+
+            <img 
+              src="https://previews.123rf.com/images/yupiramos/yupiramos1707/yupiramos170716307/82200414-tv-with-video-game-control-icon-vector-illustration-design.jpg" 
+              alt="Games and TV Menu Icon" 
+              style={{ 
+                height: 'auto',
+                maxHeight: isMobile ? '200px' : '400px',
+                maxWidth: isMobile ? '80%' : '100%',
+                transform: 'rotate(-10deg)',
+                filter: 'drop-shadow(10px 10px 0px rgba(0,0,0,0.05))'
+              }} 
+            />
+          </div>
+        ) : currentPath === '/food' ? (
+          <div style={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            maxWidth: isMobile ? '100%' : '1000px',
+            gap: isMobile ? '30px' : '80px',
+            padding: isMobile ? '20px' : '0',
+            fontFamily: COMIC_FONT,
+          }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px', textAlign: isMobile ? 'center' : 'left' }}>
+              <button
+                onClick={() => navigate('/')}
+                style={{
+                  alignSelf: isMobile ? 'center' : 'flex-start',
+                  padding: '10px 30px',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  color: '#fff',
+                  backgroundColor: '#555',
+                  border: '4px solid rgba(255,255,255,0.3)',
+                  borderRadius: '40px 15px 35px 20px',
+                  cursor: PIXEL_HAND,
+                  boxShadow: '0 8px 15px rgba(0,0,0,0.2)',
+                  transition: 'all 0.2s',
+                  outline: 'none'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1) rotate(-2deg)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1) rotate(0deg)'}
+              >
+                Back
+              </button>
+
+              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
+                <img 
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjYuszU6cbJ054Ai-7np5PVjSDnXzg7e9Pw&s" 
+                  alt="Pizza" 
+                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
+                />
+                <p style={{ margin: 0 }}>
+                  <strong>Pizza</strong> - I love Pizza because its cheesy and theres tons of toppings!
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
+                <img 
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7elco8p3G9LBsu2J1JBbi9aG4_bGHU9Tffw&s" 
+                  alt="Apples" 
+                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
+                />
+                <p style={{ margin: 0 }}>
+                  <strong>Apples</strong> - I love apples because they are healthy, and juicy!
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
+                <img 
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjl7m5jtwf9z7GdrtJwHFBb7WMwGQl6Wloqw&s" 
+                  alt="Burgers and Chips" 
+                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
+                />
+                <p style={{ margin: 0 }}>
+                  <strong>Burgers and Chips</strong> - I like burgers and chips because theres iron, and they are delicious!
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
+                <img 
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp261_f9z7HcJOsbD_X08a4dA6maVFwFsehA&s" 
+                  alt="Broccoli and Lettuce" 
+                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
+                />
+                <p style={{ margin: 0 }}>
+                  <strong>Broccoli and Lettuce</strong> - I like these because they are healthy, juicy and crunchy!
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
+                <img 
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVeBoCCrMw2eG2QtxMB235rSvo3pIlST5LPQ&s" 
+                  alt="Ice cream and Chocolate" 
+                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
+                />
+                <p style={{ margin: 0 }}>
+                  <strong>Ice cream and Chocolate</strong> - I love these for a treat because these are sweet, and delicious!
+                </p>
+              </div>
+            </div>
+
+            <img 
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzdRPx1Rk8-UWi9uRmsrAZ7yDPaHWkTLBtxQ&s" 
+              alt="Favourite Food Menu Icon" 
+              style={{ 
+                height: 'auto',
+                maxHeight: isMobile ? '320px' : '600px',
+                maxWidth: isMobile ? '80%' : '100%',
+                transform: 'rotate(8deg)',
                 filter: 'drop-shadow(10px 10px 0px rgba(0,0,0,0.05))'
               }} 
             />
@@ -313,7 +525,6 @@ const App = () => {
                 border: '4px solid rgba(255,255,255,0.4)',
                 borderRadius: '30px 90px 40px 100px',
                 cursor: PIXEL_HAND,
-                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 boxShadow: '0 10px 20px rgba(0,0,0,0.15), inset 0 -5px 0 rgba(0,0,0,0.2)',
                 transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                 minWidth: '240px',
