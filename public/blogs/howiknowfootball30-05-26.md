@@ -1,0 +1,3 @@
+Hello! Bowie here, and I'm going to tell you the story of how I learned what football actually is. 
+
+When I was younger (around 6 years old), I was playing with my friends. They were playing it the **right** way—trying to score and tackle. However, I was used to playing with my dad, where our "goals" involved one goalkeeper and just trying to score, which isn't football. I kept telling my friends they were playing wrong! I'd say, "Oh, to play football you just have one goalkeeper and try to score!" 😂😂 After a quick Google search, I realized I was the one who was wrong. Now I know football has 11 players per team and lasts 90 minutes... and I still don't understand what a tackle is. Goodbye!

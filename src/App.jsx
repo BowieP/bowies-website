@@ -1,9 +1,39 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css'; // This is required for LaTeX to look right!
 
 // --- Cursor Constants ---
 const PIXEL_HAND = 'url("https://unpkg.com/nes.css@latest/assets/cursor-click.png"), pointer';
 const PIXEL_ARROW = 'url("https://unpkg.com/nes.css@latest/assets/cursor-pointer.png"), auto';
 const COMIC_FONT = '"Comic Neue", "Chalkboard SE", "Comic Sans MS", "Comic Sans", cursive';
+
+const STORIES = {
+  'howiknowfootball30-05-26': {
+    title: 'How I know what football is :)',
+    image: 'https://i.etsystatic.com/50930003/r/il/189b75/5941058199/il_1588xN.5941058199_h6vz.jpg',
+    color: '#75FF33'
+  },
+  'astayatcraigtara29-05-26': {
+    title: 'A stay at Craig Tara',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHvMLI81SqSiu_eFRwkIkqpQ0hcwtbwIPj5w&s',
+    color: '#FFBD33',
+    video: 'https://youtube.com/embed/ZoGWgSsQIEE'
+  },
+  'mycodingjourney20-04-26': {
+    title: 'My Coding Journey',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgvMCVYTdUQTP6AqDlkfHPcURHPQ8coDLWrA&s',
+    color: '#3357FF',
+    video: 'https://youtube.com/embed/4kOt-SI_trw'
+  },
+  'whyimadethis30-05-26': {
+    title: 'Why i coded this site',
+    image: 'https://cdn-icons-png.flaticon.com/512/2920/2920244.png',
+    color: '#FF33E9'
+  }
+};
 
 // --- Shared InfoBubble Component ---
 const InfoBubble = ({ isVisible, children, isMobile, colors, top = '30px', side = 'right', width = '400px', style = {} }) => {
@@ -160,7 +190,10 @@ const App = () => {
   const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
   const [theme] = React.useState('light'); // Can be toggled to 'dark'
   const [currentPath, setCurrentPath] = React.useState(window.location.pathname);
+  const [blogContent, setBlogContent] = React.useState('');
   const isDark = theme === 'dark';
+  const storySlug = currentPath.startsWith('/blog/') ? currentPath.split('/').pop() : null;
+  const currentStory = STORIES[storySlug];
 
   // Handle window resizing and navigation
   React.useEffect(() => {
@@ -173,6 +206,25 @@ const App = () => {
       window.removeEventListener('popstate', handlePopState);
     };
   }, []);
+
+  // Fetch blog content when navigating to a story
+  React.useEffect(() => {
+    if (currentStory && storySlug) {
+      fetch(`/blogs/${storySlug}.md`, { cache: 'no-cache' })
+        .then(res => {
+          if (!res.ok) throw new Error("File not found");
+          return res.text();
+        })
+        .then(data => {
+          // Safety check: If we accidentally fetched the main website (HTML), don't show it
+          if (data.trim().startsWith('<!doctype html>')) {
+            throw new Error("Fetched HTML instead of Markdown");
+          }
+          setBlogContent(data);
+        })
+        .catch(() => setBlogContent("Sorry, I couldn't load the story right now. Please check if the file exists in your public/blogs/ folder!"));
+    }
+  }, [currentPath]);
 
   const navigate = (path) => {
     window.history.pushState({}, '', path);
@@ -199,7 +251,7 @@ const App = () => {
       cursor: PIXEL_HAND
     }}>
       <style>
-        {`@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');`}
+        {`@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;0,700;1,400;1,700&display=swap');`}
       </style>
 
       {/* Tiny Header */}
@@ -504,6 +556,153 @@ const App = () => {
               }} 
             />
           </div>
+        ) : currentPath === '/blog' ? (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-start',
+            width: '100%',
+            height: '100%',
+            gap: '20px',
+            padding: isMobile ? '0' : '20px'
+          }}>
+            <button
+              onClick={() => navigate('/')}
+              style={{
+                padding: '10px 30px',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                color: '#fff',
+                backgroundColor: '#555',
+                border: '4px solid rgba(255,255,255,0.3)',
+                borderRadius: '40px 15px 35px 20px',
+                cursor: PIXEL_HAND,
+                boxShadow: '0 8px 15px rgba(0,0,0,0.2)',
+                transition: 'all 0.2s',
+                outline: 'none'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1) rotate(-2deg)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1) rotate(0deg)'}
+            >
+              Back
+            </button>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'flex-start' }}>
+              {Object.entries(STORIES).map(([slug, story]) => (
+                <button
+                  key={slug}
+                  onClick={() => navigate(`/blog/${slug}`)}
+                  style={{
+                    padding: '15px 30px',
+                    fontSize: '18px',
+                    fontWeight: 'bold',
+                    color: '#fff',
+                    backgroundColor: story.color,
+                    border: '4px solid rgba(255,255,255,0.4)',
+                    borderRadius: '30px 90px 40px 100px',
+                    cursor: PIXEL_HAND,
+                    boxShadow: '0 10px 20px rgba(0,0,0,0.15), inset 0 -5px 0 rgba(0,0,0,0.2)',
+                    transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    minWidth: '180px',
+                    outline: 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'rotate(-3deg) scale(1.08)';
+                    e.currentTarget.style.boxShadow = '0 15px 25px rgba(0,0,0,0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'rotate(0deg) scale(1)';
+                    e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.15)';
+                  }}
+                >
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                    <img src={story.image} alt="" style={{ height: '40px', borderRadius: '8px' }} />
+                    <span style={{ fontSize: '16px' }}>{story.title}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : currentStory ? (
+          <div style={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            maxWidth: isMobile ? '100%' : '1000px',
+            gap: isMobile ? '30px' : '80px',
+            padding: isMobile ? '20px' : '0',
+            fontFamily: COMIC_FONT,
+          }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px', textAlign: isMobile ? 'center' : 'left' }}>
+              <button
+                onClick={() => navigate('/blog')}
+                style={{
+                  alignSelf: isMobile ? 'center' : 'flex-start',
+                  padding: '10px 30px',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  color: '#fff',
+                  backgroundColor: '#555',
+                  border: '4px solid rgba(255,255,255,0.3)',
+                  borderRadius: '40px 15px 35px 20px',
+                  cursor: PIXEL_HAND,
+                  boxShadow: '0 8px 15px rgba(0,0,0,0.2)',
+                  transition: 'all 0.2s',
+                  outline: 'none'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1) rotate(-2deg)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1) rotate(0deg)'}
+              >
+                Back
+              </button>
+              <div style={{ fontSize: '20px', lineHeight: '1.6' }}>
+                <h2 style={{ fontSize: '28px', color: isDark ? '#5c7cff' : '#0033cc', marginTop: 0, marginBottom: '16px', borderBottom: `1px solid ${colors.border}`, paddingBottom: '8px' }}>
+                  {currentStory.title}
+                </h2>
+                <div style={{ fontSize: '18px', lineHeight: '1.7', textAlign: 'left', opacity: 0.9 }}>
+                  {blogContent ? (
+                    <>
+                      <ReactMarkdown 
+                        remarkPlugins={[remarkGfm, remarkMath]} 
+                        rehypePlugins={[rehypeKatex]}
+                      >
+                        {blogContent}
+                      </ReactMarkdown>
+                      {currentStory.video && (
+                        <div style={{ marginTop: '20px', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                          <iframe 
+                            width="100%" 
+                            height="315" 
+                            src={currentStory.video} 
+                            title="YouTube video player" 
+                            frameBorder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowFullScreen
+                            style={{ display: 'block' }}
+                          ></iframe>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    "Loading story..."
+                  )}
+                </div>
+              </div>
+            </div>
+            <img 
+              src={currentStory.image} 
+              alt={currentStory.title} 
+              style={{ 
+                height: 'auto',
+                maxHeight: isMobile ? '200px' : '400px',
+                maxWidth: isMobile ? '80%' : '100%',
+                transform: 'rotate(5deg)',
+                filter: 'drop-shadow(10px 10px 0px rgba(0,0,0,0.05))'
+              }} 
+            />
+          </div>
         ) : (
           [
             { label: 'Hobbies', path: '/hobbies', color: '#FF5733', image: 'https://static.thenounproject.com/png/3683675-200.png' },
@@ -511,7 +710,7 @@ const App = () => {
             { label: 'Favourite Sports', path: '/sports', color: '#75FF33', image: 'https://i.etsystatic.com/50930003/r/il/189b75/5941058199/il_1588xN.5941058199_h6vz.jpg' },
             { label: 'Favourite Music', path: '/music', color: '#33FFBD', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJfQ_KIGekKxvEmjG-r1ymoLl2cjQpZEezuw&s' },
             { label: 'Favourite Games and TV', path: '/gamesandtv', color: '#3357FF', image: 'https://freesvg.org/img/Raseone-tv.png' },
-            { label: 'My Life', path: '/life', color: '#8333FF', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIf4R5qPKHPNMyAqV-FjS_OTBB8pfUV29Phg&s' }
+            { label: 'My Blog', path: '/blog', color: '#8333FF', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIf4R5qPKHPNMyAqV-FjS_OTBB8pfUV29Phg&s' }
           ].map((item) => (
             <button
               key={item.path}
