@@ -3,12 +3,302 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import { Compass } from 'lucide-react';
 import 'katex/dist/katex.min.css'; // This is required for LaTeX to look right!
+
+// --- Error Boundary Component ---
+// React Error Boundaries must be class components.
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ textAlign: 'center', padding: '50px', fontFamily: '"Comic Neue", sans-serif' }}>
+          <h1 style={{ color: 'blue' }}>A Cosmic Glitch! 🌌</h1>
+          <p>Something went wrong in this part of the Cosmos.</p>
+          <button onClick={() => window.location.href = '/'} style={{ padding: '10px 20px', cursor: 'pointer', borderRadius: '8px' }}>Return to Safety</button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// --- Data Constants ---
+const HOBBIES_DATA = {
+  title: "Hello! I am Bowie and my favorite hobbies are:",
+  icon: "https://cdn-icons-png.flaticon.com/512/10472/10472903.png",
+  rotate: '12deg',
+  items: [
+    { label: 'Coding', text: 'I love tech and coding cool things, and I am the founder of Code Cosmos!', link: 'https://bowie.pages.codecosmos.net/blog/mycodingjourney20-04-26'  },
+    { label: 'Sports', text: 'I love playing sport like swimming, football, basketball, dancing and more!', link: 'https://bowie.pages.codecosmos.net/sports' },
+    { label: 'Gaming', text: 'I love board and video games, like Minecraft and Scrabble!', link: 'https://bowie.pages.codecosmos.net/gamesandtv' },
+    { label: 'Music', text: 'I love listening to music, both accapela, instrumental and both!', link: 'https://bowie.pages.codecosmos.net/music' }
+  ]
+};
+
+const GAMES_DATA = {
+  icon: "https://previews.123rf.com/images/yupiramos/yupiramos1707/yupiramos170716307/82200414-tv-with-video-game-control-icon-vector-illustration-design.jpg",
+  rotate: '-10deg',
+  items: [
+    { label: 'Minecraft', image: 'https://upload.wikimedia.org/wikinews/en/7/7a/Minecraft_game_cover.jpeg?utm_source=en.wikinews.org&utm_campaign=index&utm_content=original', text: 'I love playing this game because i think its fun and blocky!' },
+    { label: 'Mario Kart', image: 'https://gamegeneral.de/wp-content/uploads/2021/11/Mario-Kart-8-Deluxe-Thumbnail.jpg', text: 'I like this game because you can drive across tons of tracks!' },
+    { label: 'Fall Guys', image: 'https://assets.nintendo.com/image/upload/q_auto/f_auto/store/software/switch/70010000042975/937afd0c84319831009b44c93369faf0a2c926a454809f73523df9bfb6cf6233', text: 'I like this game because you move a bean to complete levels!' },
+    { label: 'Worms Rumble', image: 'https://upload.wikimedia.org/wikipedia/en/6/63/Worms_Rumble_cover_art.jpg', text: "I like this game, it's a shooter but it's for kids and it's about worms!" },
+    { label: 'Wreck-It Ralph Breaks the Internet', image: 'https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/dbe22eba-5cb6-4c1d-b5d2-ca1a12830131/compose?aspectRatio=1.78&format=webp&width=1200', text: "I like this movie because it's about the internet and games!" },
+    { label: 'How to Train Your Dragon', image: 'https://i.ytimg.com/vi/22w7z_lT6YM/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB8hdcinp8PhoiHrBu5W2kV6EE8oQ', text: 'I love this movie because its about dragons and adventure!' },
+    { label: 'The Bad Guys', image: 'https://www.dreamworks.com/storage/cms-uploads/the-bad-guys-share-image.jpg', text: 'I like this film because its about adventure, heist and action!' },
+    { label: 'Sonic the Hedgehog', image: 'https://upload.wikimedia.org/wikipedia/en/thumb/4/45/Sonic_the_Hedgehog_film_poster.jpg/250px-Sonic_the_Hedgehog_film_poster.jpg', text: 'I like this movie because it is fast-paced and full of action!' }
+  ]
+};
+
+const FOOD_DATA = {
+  icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzdRPx1Rk8-UWi9uRmsrAZ7yDPaHWkTLBtxQ&s",
+  rotate: '8deg',
+  iconMaxHeight: '600px',
+  items: [
+    { label: 'Pizza', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjYuszU6cbJ054Ai-7np5PVjSDnXzg7e9Pw&s', text: 'I love Pizza because its cheesy and theres tons of toppings! And i like the unusual combination of pizza and pesto!' },
+    { label: 'Apples', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7elco8p3G9LBsu2J1JBbi9aG4_bGHU9Tffw&s', text: 'I love apples because they are healthy, and juicy!' },
+    { label: 'Burgers and Chips', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjl7m5jtwf9z7GdrtJwHFBb7WMwGQl6Wloqw&s', text: 'I like burgers and chips because theres iron, and they are delicious!' },
+    { label: 'Broccoli and Lettuce', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp261_f9z7HcJOsbD_X08a4dA6maVFwFsehA&s', text: 'I like these because they are healthy, juicy and crunchy!' },
+    { label: 'Ice cream and Chocolate', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVeBoCCrMw2eG2QtxMB235rSvo3pIlST5LPQ&s', text: 'I love these for a treat because these are sweet, and delicious!' },
+    { label: 'Milk and Juice', image: 'https://thumbs.dreamstime.com/b/glass-milk-orange-juice-delicious-yogurt-fresh-icon-wiyh-tasty-dairy-sweet-fruit-drink-vector-cartoon-illustration-84333851.jpg', text: 'I like these because they are super sweet and healthy!' },
+    { label: 'Pasta', image: 'https://cdn-icons-png.flaticon.com/512/4127/4127288.png', text: 'Pasta - I love eating pasta - and i like the unusual combination of pasta and pesto!' }
+  ]
+};
+
+const PROJECTS_DATA = {
+  title: "My Coding Projects",
+  icon: "https://cdn-icons-png.flaticon.com/512/1005/1005141.png",
+  rotate: '-5deg',
+  items: [
+    { label: 'Code Cosmos', image: 'https://kidvids.codecosmos.net/logo2.png', text: 'The main hub for my network of apps and sites.', link: 'https://codecosmos.net', videoModalUrl: 'https://youtube.com/embed/4kOt-SI_trw' },
+    { label: 'KidVids', image: 'https://kidvids.codecosmos.net/logo.png', text: 'A video platform similar to YouTube. Not finished.', link: 'https://kidvids.codecosmos.net', hasScreenshots: true },
+    { label: 'A Clicker Game', image: 'https://cdn.makecode.com/blob/9ab4abfcdff3405e5cca8a3c38e129aec2b363e3/static/logo.png', text: 'A fun game I built to practice state management and animations. In MakeCode Arcade.', link: 'https://arcade.makecode.com/S57641-09029-27229-92314', hasScreenshots: true },
+    { label: 'Personal Site', image: 'https://bowie.pages.codecosmos.net/favicon.png', text: 'The site you are looking at right now! Built with React and CSS animations.', link: 'https://bowie.pages.codecosmos.net', hasScreenshots: true },
+    { 
+      label: ' Bowies Cookie Clicker', 
+      image: 'https://bowie.pages.codecosmos.net/bowiescookieclickerlogo.jpeg', 
+      text: 'I tried to make a copy of Cookie Clicker in JSX. Built on Google Gemini Canvas.', 
+      hasScreenshots: true,
+      screenshots: [
+        'https://lh3.googleusercontent.com/d/1XUFl5FFMLm3iBFgjQ3qutaMlMj1TDqsE',
+        'https://lh3.googleusercontent.com/d/1S84_ffTIfyvNd2QxMfjlsl32pd2JMeWm',
+        'https://lh3.googleusercontent.com/d/10SeYKuw_ITXZjtKpZppDEKdOJUoPSbb-',
+        'https://lh3.googleusercontent.com/d/1HlT7fDTRcCXC-Mh0bqNMw4ahEb5y2Ayr',
+        'https://lh3.googleusercontent.com/d/1WVNKr4V9k8B_9m5qKcphtAHXwexq6--I'
+      ]
+    },
+    {
+      label: 'Bean Royale',
+      image: 'https://bowie.pages.codecosmos.net/beanroyalelogo.png',
+      text: 'I made this game on Gemini AI Canvas and i used HTML and three.js!',
+      videoModalUrl: 'https://youtube.com/embed/PlbVV_Ao1zM',
+      hasScreenshots: true,
+      screenshots: [
+        'https://lh3.googleusercontent.com/d/1TZR7WkHdNTOb4MeLKPRTRoyZaBqV84SD',
+        'https://lh3.googleusercontent.com/d/1zWkStI1aEN9y0JNWwg5XkzQ1esb7-wQ8',
+        'https://lh3.googleusercontent.com/d/1hW2TSsT8WRPEDfYNLmEMKvXNPtQbDor0',
+        'https://lh3.googleusercontent.com/d/19ifORTqpr0LWHloP-h7dIRV0t-yXlGMQ',
+        'https://lh3.googleusercontent.com/d/16DvsHxQFiRGejvMFLBlYAZ5WfHbdbjWp'
+      ]
+    }
+  ]
+};
+
+const MENU_ITEMS = [
+  { label: 'Hobbies', path: '/hobbies', color: '#FF5733', image: 'https://static.thenounproject.com/png/3683675-200.png' },
+  { label: 'My Projects', path: '/projects', color: '#4287f5', image: 'https://cdn-icons-png.flaticon.com/512/1005/1005141.png' },
+  { label: 'Favourite Food', path: '/food', color: '#FFBD33', image: 'https://i.etsystatic.com/21829091/r/il/65a572/6400668980/il_570xN.6400668980_eaf8.jpg' },
+  { label: 'Favourite Sports', path: '/sports', color: '#75FF33', image: 'https://i.etsystatic.com/50930003/r/il/189b75/5941058199/il_1588xN.5941058199_h6vz.jpg' },
+  { label: 'Favourite Music', path: '/music', color: '#33FFBD', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJfQ_KIGekKxvEmjG-r1ymoLl2cjQpZEezuw&s' },
+  { label: 'Favourite Games and TV', path: '/gamesandtv', color: '#3357FF', image: 'https://freesvg.org/img/Raseone-tv.png' },
+  { label: 'My Blog', path: '/blog', color: '#8333FF', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIf4R5qPKHPNMyAqV-FjS_OTBB8pfUV29Phg&s' }
+];
 
 // --- Cursor Constants ---
 const PIXEL_HAND = 'url("https://unpkg.com/nes.css@latest/assets/cursor-click.png"), pointer';
 const PIXEL_ARROW = 'url("https://unpkg.com/nes.css@latest/assets/cursor-pointer.png"), auto';
 const COMIC_FONT = '"Comic Neue", "Chalkboard SE", "Comic Sans MS", "Comic Sans", cursive';
+
+const THEME = {
+  shadow: '0 12px 0 rgba(0,0,0,0.2)',
+  shadowHover: '0 16px 0 rgba(0,0,0,0.15)',
+  shadowActive: '0 0 0 rgba(0,0,0,0.2)',
+  glass: 'rgba(255, 255, 255, 0.05)',
+  transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+  glow: '0 0 20px rgba(0, 51, 204, 0.3)'
+};
+
+// --- UI Helper Components ---
+const BackBtn = ({ onClick, isMobile }) => (
+  <button
+    onClick={onClick}
+    style={{
+      alignSelf: isMobile ? 'center' : 'flex-start',
+      padding: '10px 28px',
+      fontSize: '15px',
+      fontWeight: 'bold',
+      color: '#fff',
+      backgroundColor: '#555',
+      border: '4px solid rgba(255,255,255,0.3)',
+      borderRadius: '40px 15px 35px 20px',
+      cursor: PIXEL_HAND,
+      fontFamily: COMIC_FONT,
+      boxShadow: THEME.shadow,
+      transition: THEME.transition,
+      outline: 'none'
+    }}
+    onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-6px) rotate(-2deg)'; e.currentTarget.style.boxShadow = THEME.shadowHover; }}
+    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0) rotate(0deg)'}
+    onMouseDown={(e) => { e.currentTarget.style.transform = 'translateY(12px)'; e.currentTarget.style.boxShadow = THEME.shadowActive; }}
+    onMouseUp={(e) => { e.currentTarget.style.transform = 'translateY(-6px) rotate(-2deg)'; e.currentTarget.style.boxShadow = THEME.shadowHover; }}
+  >
+    Back
+  </button>
+);
+
+const SubMenuListView = ({ title, items, icon, rotate, isMobile, onBack, onAction = () => {}, iconMaxHeight = '400px' }) => (
+  <div style={{
+    display: 'flex',
+    flexDirection: isMobile ? 'column' : 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    maxWidth: isMobile ? '100%' : '1000px',
+    gap: isMobile ? '30px' : '80px',
+    padding: isMobile ? '20px' : '0',
+    fontFamily: COMIC_FONT,
+  }}>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px', textAlign: isMobile ? 'center' : 'left' }}>
+      <BackBtn onClick={onBack} isMobile={isMobile} />
+      {title && <h2 style={{ fontSize: '32px', color: '#0033cc', marginTop: 0, marginBottom: '20px', letterSpacing: '-0.02em' }}>{title}</h2>}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        {items.map((item, idx) => (
+          <div key={idx} style={{ 
+            display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '20px', fontSize: '18px', lineHeight: '1.6',
+            backgroundColor: 'rgba(0,51,204,0.03)', padding: '15px', borderRadius: '15px', border: '1px solid rgba(0,51,204,0.1)', 
+            animation: `fadeInUp 0.4s ease forwards ${idx * 0.1}s`, opacity: 0,
+            transition: THEME.transition, cursor: PIXEL_HAND
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(0,51,204,0.06)';
+            e.currentTarget.style.transform = 'translateX(10px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(0,51,204,0.03)';
+            e.currentTarget.style.transform = 'translateX(0)';
+          }}>
+            {item.image && <img src={item.image} alt={item.label} style={{ height: '70px', width: '70px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0, boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />}
+            <p style={{ margin: 0 }}>
+              <strong>{item.label}</strong> - {item.text}
+              {item.link && (
+                <>
+                  <br/> 
+                  <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ color: 'blue', textDecoration: 'none' }}>{item.link.replace('https://', '')}</a>
+                </>
+              )}
+              {item.videoModalUrl && (
+                <span 
+                  onClick={(e) => { e.stopPropagation(); onAction({ type: 'video', url: item.videoModalUrl, title: item.label }); }}
+                  style={{ marginLeft: '10px', color: '#FF0000', cursor: PIXEL_HAND, fontWeight: 'bold', textDecoration: 'underline', fontSize: '14px' }}
+                >
+                  video
+                </span>
+              )}
+              {item.hasScreenshots && (
+                <span 
+                  onClick={(e) => { e.stopPropagation(); onAction({ type: 'screenshots', title: item.label, screenshots: item.screenshots }); }}
+                  style={{ marginLeft: '10px', color: '#28a745', cursor: PIXEL_HAND, fontWeight: 'bold', textDecoration: 'underline', fontSize: '14px' }}
+                >
+                  screenshots
+                </span>
+              )}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+    <img 
+      src={icon} 
+      alt="Menu Icon" 
+      style={{ 
+        height: 'auto',
+        maxHeight: isMobile ? '200px' : iconMaxHeight,
+        maxWidth: isMobile ? '80%' : '100%',
+        transform: `rotate(${rotate})`,
+        filter: 'drop-shadow(10px 10px 0px rgba(0,0,0,0.05))'
+      }} 
+    />
+  </div>
+);
+
+// --- Draggable Modal Component ---
+const DraggableModal = ({ isOpen, onClose, title, children, isMobile }) => {
+  const [pos, setPos] = React.useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [rel, setRel] = React.useState({ x: 0, y: 0 });
+
+  React.useEffect(() => {
+    if (!isOpen) setPos({ x: 0, y: 0 });
+  }, [isOpen]);
+
+  const onMouseDown = (e) => {
+    if (e.button !== 0) return;
+    setIsDragging(true);
+    setRel({ x: e.clientX - pos.x, y: e.clientY - pos.y });
+    e.stopPropagation();
+  };
+
+  React.useEffect(() => {
+    const onMouseMove = (e) => {
+      if (!isDragging) return;
+      setPos({ x: e.clientX - rel.x, y: e.clientY - rel.y });
+    };
+    const onMouseUp = () => setIsDragging(false);
+
+    if (isDragging) {
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
+    }
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }, [isDragging, rel]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+      backgroundColor: 'rgba(0,0,0,0.7)', zIndex: 10000,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      pointerEvents: 'auto'
+    }}>
+      <div style={{
+        position: 'relative', transform: `translate(${pos.x}px, ${pos.y}px)`,
+        width: isMobile ? '95%' : '700px', backgroundColor: '#fff',
+        borderRadius: '20px', boxShadow: '0 40px 100px rgba(0,0,0,0.5)',
+        border: '5px solid #0033cc', overflow: 'hidden'
+      }}>
+        <div onMouseDown={onMouseDown} style={{ padding: '15px 25px', backgroundColor: '#0033cc', color: '#fff', cursor: 'move', display: 'flex', justifyContent: 'space-between', alignItems: 'center', userSelect: 'none' }}>
+          <span style={{ fontWeight: 'bold', fontSize: '20px' }}>{title}</span>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '32px', cursor: PIXEL_HAND, lineHeight: '0.8', padding: '0 5px' }}>×</button>
+        </div>
+        <div style={{ padding: '25px', backgroundColor: '#fff', minHeight: '300px' }}>{children}</div>
+      </div>
+    </div>
+  );
+};
 
 const STORIES = {
   'howiknowfootball30-05-26': {
@@ -75,7 +365,7 @@ const InfoBubble = ({ isVisible, children, isMobile, colors, top = '30px', side 
 };
 
 // --- Header Component ---
-const HeaderBrandingSnippet = ({ isMobile, colors, isDark }) => {
+const HeaderBrandingSnippet = ({ isMobile, colors, isDark, toggleTheme }) => {
   // Hover states for the different branding items
   const [codeCosmosHover, setCodeCosmosHover] = React.useState(false);
   const [youtubeHover, setYoutubeHover] = React.useState(false);
@@ -146,6 +436,19 @@ const HeaderBrandingSnippet = ({ isMobile, colors, isDark }) => {
       {/* Right Side: Socials & External Links */}
       <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '10px' : '20px', position: 'relative' }}>
         
+        {/* Theme Toggle */}
+        <button 
+          onClick={toggleTheme}
+          style={{
+            background: 'none', border: 'none', cursor: PIXEL_HAND, padding: '4px',
+            display: 'flex', alignItems: 'center', transition: 'transform 0.2s'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.2) rotate(15deg)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1) rotate(0deg)'}
+        >
+          {isDark ? '🌙' : '☀️'}
+        </button>
+        
         {/* YouTube */}
         <div onMouseEnter={() => setYoutubeHover(true)} onMouseLeave={() => setYoutubeHover(false)} style={{ position: 'relative' }}>
           <a href="https://youtube.com/@CodeCosmos_YT" style={grayscaleHeaderItem}>
@@ -188,9 +491,10 @@ const HeaderBrandingSnippet = ({ isMobile, colors, isDark }) => {
 // --- Main App Component ---
 const App = () => {
   const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
-  const [theme] = React.useState('light'); // Can be toggled to 'dark'
+  const [theme, setTheme] = React.useState('light'); 
   const [currentPath, setCurrentPath] = React.useState(window.location.pathname);
   const [blogContent, setBlogContent] = React.useState('');
+  const [modalData, setModalData] = React.useState(null);
   const isDark = theme === 'dark';
   const storySlug = currentPath.startsWith('/blog/') ? currentPath.split('/').pop() : null;
   const currentStory = STORIES[storySlug];
@@ -210,6 +514,7 @@ const App = () => {
   // Fetch blog content when navigating to a story
   React.useEffect(() => {
     if (currentStory && storySlug) {
+      setBlogContent(''); // Clear previous content while loading new story
       fetch(`/blogs/${storySlug}.md`, { cache: 'no-cache' })
         .then(res => {
           if (!res.ok) throw new Error("File not found");
@@ -231,6 +536,8 @@ const App = () => {
     setCurrentPath(path);
   };
 
+  const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
+
   const colors = {
     bg: isDark ? '#121212' : '#ffffff',
     text: isDark ? '#e0e0e0' : '#1a1a1a',
@@ -248,36 +555,135 @@ const App = () => {
       fontFamily: COMIC_FONT,
       overflowX: 'hidden',
       overflowY: 'auto',
-      cursor: PIXEL_HAND
+      cursor: PIXEL_HAND,
+      backgroundImage: `radial-gradient(circle at 2px 2px, rgba(0,51,204,0.05) 1px, transparent 0)`,
+      backgroundSize: '40px 40px',
+      animation: 'starScroll 60s linear infinite'
     }}>
       <style>
-        {`@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;0,700;1,400;1,700&display=swap');`}
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+          @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+          }
+          @keyframes cosmosFloat {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(15deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+          }
+          @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+          }
+          @keyframes glint {
+            0% { transform: translateX(-150%) skewX(-25deg); }
+            50%, 100% { transform: translateX(150%) skewX(-25deg); }
+          }
+          @keyframes starScroll {
+            from { background-position: 0 0; }
+            to { background-position: -1000px 1000px; }
+          }
+          @keyframes blackHolePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+          }
+          @keyframes photonGlow {
+            0%, 100% { box-shadow: 0 0 20px 2px #fff, 0 0 40px 10px #0033cc, 0 0 100px 30px #000; }
+            50% { box-shadow: 0 0 30px 5px #fff, 0 0 60px 20px #0033cc, 0 0 130px 50px #000; }
+          }
+          @keyframes accretionSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+          /* Custom Scrollbar Juice */
+          ::-webkit-scrollbar {
+            width: 12px;
+          }
+          ::-webkit-scrollbar-track {
+            background: ${isDark ? '#1a1a1a' : '#f1f1f1'};
+          }
+          ::-webkit-scrollbar-thumb {
+            background: #0033cc;
+            border-radius: 6px;
+            border: 3px solid ${isDark ? '#1a1a1a' : '#f1f1f1'};
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.2);
+          }
+          ::-webkit-scrollbar-thumb:hover {
+            background: #5c7cff;
+          }
+        `}
       </style>
 
       {/* Tiny Header */}
+      <ErrorBoundary>
       <HeaderBrandingSnippet 
         isMobile={isMobile} 
         colors={colors} 
         isDark={isDark} 
+        toggleTheme={toggleTheme}
       />
+      </ErrorBoundary>
 
       {/* Second Header */}
       <div style={{
         height: '60px',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'flex-start',
+        gap: isMobile ? '12px' : '32px',
         padding: isMobile ? '0 12px' : '0 24px',
         borderBottom: `1px solid ${colors.border}`,
         backgroundColor: colors.bg
       }}>
-        <img 
-          src="/favicon.jpeg" 
-          alt="Icon" 
-          style={{ height: '40px', width: '40px', marginRight: '12px', objectFit: 'cover', borderRadius: '4px' }} 
-        />
-        <span style={{ fontSize: '24px', fontWeight: 'bold', color: 'blue' }}>
-          Bowie's Stuff
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <img 
+            src="/favicon.png" 
+            alt="Icon" 
+            style={{ height: '40px', width: '40px', marginRight: '12px', objectFit: 'cover', borderRadius: '4px' }} 
+          />
+          <span style={{ fontSize: '24px', fontWeight: 'bold', color: 'blue', animation: 'titleFloat 4s ease-in-out infinite' }}>
+            Bowie's Stuff
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', gap: isMobile ? '8px' : '16px' }}>
+          <a 
+            href="https://youtube.com/@CodeCosmos_YT" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{
+              display: 'flex', alignItems: 'center', gap: '8px', padding: isMobile ? '6px 12px' : '8px 20px',
+              backgroundColor: '#fff', color: '#000', borderRadius: '12px 6px 14px 8px', border: '3px solid #FF0000',
+              textDecoration: 'none', fontSize: '14px', fontWeight: 'bold', cursor: PIXEL_HAND, boxShadow: THEME.shadow, transition: THEME.transition
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-6px) rotate(-2deg)'; e.currentTarget.style.boxShadow = THEME.shadowHover; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0) rotate(0deg)'; e.currentTarget.style.boxShadow = THEME.shadow; }}
+            onMouseDown={(e) => { e.currentTarget.style.transform = 'translateY(12px)'; e.currentTarget.style.boxShadow = THEME.shadowActive; }}
+            onMouseUp={(e) => { e.currentTarget.style.transform = 'translateY(-6px) rotate(-2deg)'; e.currentTarget.style.boxShadow = THEME.shadowHover; }}
+          >
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YT" style={{ height: '16px' }} />
+            {!isMobile && "YouTube"}
+          </a>
+
+          <a 
+            href="https://github.com/The-Code-Cosmos" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{
+              display: 'flex', alignItems: 'center', gap: '8px', padding: isMobile ? '6px 12px' : '8px 20px',
+              backgroundColor: '#333', color: '#fff', borderRadius: '8px 14px 6px 12px', border: '3px solid rgba(255,255,255,0.3)',
+              textDecoration: 'none', fontSize: '14px', fontWeight: 'bold', cursor: PIXEL_HAND, boxShadow: THEME.shadow, transition: THEME.transition
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-6px) rotate(2deg)'; e.currentTarget.style.boxShadow = THEME.shadowHover; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0) rotate(0deg)'; e.currentTarget.style.boxShadow = THEME.shadow; }}
+            onMouseDown={(e) => { e.currentTarget.style.transform = 'translateY(12px)'; e.currentTarget.style.boxShadow = THEME.shadowActive; }}
+            onMouseUp={(e) => { e.currentTarget.style.transform = 'translateY(-6px) rotate(2deg)'; e.currentTarget.style.boxShadow = THEME.shadowHover; }}
+          >
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" style={{ height: '18px', filter: 'invert(1)' }} />
+            {!isMobile && "GitHub"}
+          </a>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -291,271 +697,32 @@ const App = () => {
         padding: '24px',
         position: 'relative'
       }}>
+        <ErrorBoundary>
         {currentPath === '/hobbies' ? (
-          <div style={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            maxWidth: isMobile ? '100%' : '1000px',
-            gap: isMobile ? '30px' : '80px',
-            padding: isMobile ? '20px' : '0',
-          }}>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px', textAlign: isMobile ? 'center' : 'left' }}>
-              <button
-                onClick={() => navigate('/')}
-                style={{
-                  alignSelf: isMobile ? 'center' : 'flex-start',
-                  padding: '10px 30px',
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                  color: '#fff',
-                  backgroundColor: '#555',
-                  border: '4px solid rgba(255,255,255,0.3)',
-                  borderRadius: '40px 15px 35px 20px',
-                  cursor: PIXEL_HAND,
-                  boxShadow: '0 8px 15px rgba(0,0,0,0.2)',
-                  transition: 'all 0.2s',
-                  outline: 'none'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1) rotate(-2deg)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1) rotate(0deg)'}
-              >
-                Back
-              </button>
-
-              <div style={{ fontSize: '20px', lineHeight: '1.6', overflowWrap: 'anywhere' }}>
-                <h2 style={{ fontSize: '32px', color: 'blue', marginTop: 0, marginBottom: '20px' }}>
-                  Hello! I am Bowie and my favorite hobbies are:
-                </h2>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <p style={{ margin: 0 }}><strong>Coding</strong> - I love tech and coding cool things, and I am the founder of Code Cosmos!</p>
-                  <p style={{ margin: 0 }}><strong>Sports</strong> - I love playing sport like swimming, football, basketball, dancing and more! <br/> <a href="https://bowie.pages.codecosmos.net/sports" style={{ color: 'blue', textDecoration: 'none' }}>bowie.pages.codecosmos.net/sports</a></p>
-                  <p style={{ margin: 0 }}><strong>Gaming</strong> - I love board and video games, like Minecraft and Mario! <br/> <a href="https://bowie.pages.codecosmos.net/gamesandtv" style={{ color: 'blue', textDecoration: 'none' }}>bowie.pages.codecosmos.net/gamesandtv</a></p>
-                  <p style={{ margin: 0 }}><strong>Music</strong> - I love listening to music, both accapela, instrumental and both! <br/> <a href="https://bowie.pages.codecosmos.net/music" style={{ color: 'blue', textDecoration: 'none' }}>bowie.pages.codecosmos.net/music</a></p>
-                </div>
-              </div>
-            </div>
-
-            <img 
-              src="https://cdn-icons-png.flaticon.com/512/10472/10472903.png" 
-              alt="Hobbies Menu Icon" 
-              style={{ 
-                height: 'auto',
-                maxHeight: isMobile ? '200px' : '400px',
-                maxWidth: isMobile ? '80%' : '100%',
-                transform: 'rotate(12deg)',
-                filter: 'drop-shadow(10px 10px 0px rgba(0,0,0,0.05))'
-              }} 
-            />
-          </div>
+          <SubMenuListView 
+            {...HOBBIES_DATA} 
+            isMobile={isMobile} 
+            onBack={() => navigate('/')} 
+          />
         ) : currentPath === '/gamesandtv' ? (
-          <div style={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            maxWidth: isMobile ? '100%' : '1000px',
-            gap: isMobile ? '30px' : '80px',
-            padding: isMobile ? '20px' : '0',
-            fontFamily: COMIC_FONT,
-          }}>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px', textAlign: isMobile ? 'center' : 'left' }}>
-              <button
-                onClick={() => navigate('/')}
-                style={{
-                  alignSelf: isMobile ? 'center' : 'flex-start',
-                  padding: '10px 30px',
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                  color: '#fff',
-                  backgroundColor: '#555',
-                  border: '4px solid rgba(255,255,255,0.3)',
-                  borderRadius: '40px 15px 35px 20px',
-                  cursor: PIXEL_HAND,
-                  boxShadow: '0 8px 15px rgba(0,0,0,0.2)',
-                  transition: 'all 0.2s',
-                  outline: 'none'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1) rotate(-2deg)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1) rotate(0deg)'}
-              >
-                Back
-              </button>
-
-              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
-                <img 
-                  src="https://upload.wikimedia.org/wikinews/en/7/7a/Minecraft_game_cover.jpeg?utm_source=en.wikinews.org&utm_campaign=index&utm_content=original" 
-                  alt="Minecraft" 
-                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
-                />
-                <p style={{ margin: 0 }}>
-                  <strong>Minecraft</strong> - I love playing this game because i think its fun and blocky!
-                </p>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
-                <img 
-                  src="https://gamegeneral.de/wp-content/uploads/2021/11/Mario-Kart-8-Deluxe-Thumbnail.jpg" 
-                  alt="Mario Kart" 
-                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
-                />
-                <p style={{ margin: 0 }}>
-                  <strong>Mario Kart</strong> - I like this game because you can drive across tons of tracks!
-                </p>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
-                <img 
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOi2K4344dLe_LRseE3HaN8NN5AnNNZX2H3Q&s" 
-                  alt="The Emoji Movie" 
-                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
-                />
-                <p style={{ margin: 0 }}>
-                  <strong>The Emoji Movie</strong> - I like this film because it fits the tech aesthetic and is about emojis and hacking!
-                </p>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
-                <img 
-                  src="https://upload.wikimedia.org/wikipedia/en/6/63/Worms_Rumble_cover_art.jpg" 
-                  alt="Worms Rumble" 
-                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
-                />
-                <p style={{ margin: 0 }}>
-                  <strong>Worms Rumble</strong> - I like this game, it's a shooter but it's for kids and it's about worms!
-                </p>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
-                <img 
-                  src="https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/dbe22eba-5cb6-4c1d-b5d2-ca1a12830131/compose?aspectRatio=1.78&format=webp&width=1200" 
-                  alt="Wreck-It Ralph" 
-                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
-                />
-                <p style={{ margin: 0 }}>
-                  <strong>Wreck-It Ralph Breaks the Internet</strong> - I like this movie because it's about the internet and games!
-                </p>
-              </div>
-            </div>
-
-            <img 
-              src="https://previews.123rf.com/images/yupiramos/yupiramos1707/yupiramos170716307/82200414-tv-with-video-game-control-icon-vector-illustration-design.jpg" 
-              alt="Games and TV Menu Icon" 
-              style={{ 
-                height: 'auto',
-                maxHeight: isMobile ? '200px' : '400px',
-                maxWidth: isMobile ? '80%' : '100%',
-                transform: 'rotate(-10deg)',
-                filter: 'drop-shadow(10px 10px 0px rgba(0,0,0,0.05))'
-              }} 
-            />
-          </div>
+          <SubMenuListView 
+            {...GAMES_DATA} 
+            isMobile={isMobile} 
+            onBack={() => navigate('/')} 
+          />
         ) : currentPath === '/food' ? (
-          <div style={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            maxWidth: isMobile ? '100%' : '1000px',
-            gap: isMobile ? '30px' : '80px',
-            padding: isMobile ? '20px' : '0',
-            fontFamily: COMIC_FONT,
-          }}>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px', textAlign: isMobile ? 'center' : 'left' }}>
-              <button
-                onClick={() => navigate('/')}
-                style={{
-                  alignSelf: isMobile ? 'center' : 'flex-start',
-                  padding: '10px 30px',
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                  color: '#fff',
-                  backgroundColor: '#555',
-                  border: '4px solid rgba(255,255,255,0.3)',
-                  borderRadius: '40px 15px 35px 20px',
-                  cursor: PIXEL_HAND,
-                  boxShadow: '0 8px 15px rgba(0,0,0,0.2)',
-                  transition: 'all 0.2s',
-                  outline: 'none'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1) rotate(-2deg)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1) rotate(0deg)'}
-              >
-                Back
-              </button>
-
-              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
-                <img 
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjYuszU6cbJ054Ai-7np5PVjSDnXzg7e9Pw&s" 
-                  alt="Pizza" 
-                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
-                />
-                <p style={{ margin: 0 }}>
-                  <strong>Pizza</strong> - I love Pizza because its cheesy and theres tons of toppings!
-                </p>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
-                <img 
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7elco8p3G9LBsu2J1JBbi9aG4_bGHU9Tffw&s" 
-                  alt="Apples" 
-                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
-                />
-                <p style={{ margin: 0 }}>
-                  <strong>Apples</strong> - I love apples because they are healthy, and juicy!
-                </p>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
-                <img 
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjl7m5jtwf9z7GdrtJwHFBb7WMwGQl6Wloqw&s" 
-                  alt="Burgers and Chips" 
-                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
-                />
-                <p style={{ margin: 0 }}>
-                  <strong>Burgers and Chips</strong> - I like burgers and chips because theres iron, and they are delicious!
-                </p>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
-                <img 
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp261_f9z7HcJOsbD_X08a4dA6maVFwFsehA&s" 
-                  alt="Broccoli and Lettuce" 
-                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
-                />
-                <p style={{ margin: 0 }}>
-                  <strong>Broccoli and Lettuce</strong> - I like these because they are healthy, juicy and crunchy!
-                </p>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '16px', fontSize: '20px', lineHeight: '1.6' }}>
-                <img 
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVeBoCCrMw2eG2QtxMB235rSvo3pIlST5LPQ&s" 
-                  alt="Ice cream and Chocolate" 
-                  style={{ height: '80px', borderRadius: '8px', flexShrink: 0 }} 
-                />
-                <p style={{ margin: 0 }}>
-                  <strong>Ice cream and Chocolate</strong> - I love these for a treat because these are sweet, and delicious!
-                </p>
-              </div>
-            </div>
-
-            <img 
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzdRPx1Rk8-UWi9uRmsrAZ7yDPaHWkTLBtxQ&s" 
-              alt="Favourite Food Menu Icon" 
-              style={{ 
-                height: 'auto',
-                maxHeight: isMobile ? '320px' : '600px',
-                maxWidth: isMobile ? '80%' : '100%',
-                transform: 'rotate(8deg)',
-                filter: 'drop-shadow(10px 10px 0px rgba(0,0,0,0.05))'
-              }} 
-            />
-          </div>
+          <SubMenuListView 
+            {...FOOD_DATA} 
+            isMobile={isMobile} 
+            onBack={() => navigate('/')} 
+          />
+        ) : currentPath === '/projects' ? (
+          <SubMenuListView 
+            {...PROJECTS_DATA} 
+            isMobile={isMobile} 
+            onBack={() => navigate('/')} 
+            onAction={setModalData}
+          />
         ) : currentPath === '/blog' ? (
           <div style={{
             display: 'flex',
@@ -567,26 +734,7 @@ const App = () => {
             gap: '20px',
             padding: isMobile ? '0' : '20px'
           }}>
-            <button
-              onClick={() => navigate('/')}
-              style={{
-                padding: '10px 30px',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                color: '#fff',
-                backgroundColor: '#555',
-                border: '4px solid rgba(255,255,255,0.3)',
-                borderRadius: '40px 15px 35px 20px',
-                cursor: PIXEL_HAND,
-                boxShadow: '0 8px 15px rgba(0,0,0,0.2)',
-                transition: 'all 0.2s',
-                outline: 'none'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1) rotate(-2deg)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1) rotate(0deg)'}
-            >
-              Back
-            </button>
+            <BackBtn onClick={() => navigate('/')} isMobile={isMobile} />
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'flex-start' }}>
               {Object.entries(STORIES).map(([slug, story]) => (
                 <button
@@ -597,26 +745,37 @@ const App = () => {
                     fontSize: '18px',
                     fontWeight: 'bold',
                     color: '#fff',
-                    backgroundColor: story.color,
+                    backgroundColor: story.color || '#888',
                     border: '4px solid rgba(255,255,255,0.4)',
                     borderRadius: '30px 90px 40px 100px',
                     cursor: PIXEL_HAND,
-                    boxShadow: '0 10px 20px rgba(0,0,0,0.15), inset 0 -5px 0 rgba(0,0,0,0.2)',
-                    transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    boxShadow: THEME.shadow,
+                    transition: THEME.transition,
                     minWidth: '180px',
-                    outline: 'none'
+                    position: 'relative',
+                    overflow: 'hidden',
+                    outline: 'none',
+                    animation: 'fadeInUp 0.5s ease-out forwards'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'rotate(-3deg) scale(1.08)';
-                    e.currentTarget.style.boxShadow = '0 15px 25px rgba(0,0,0,0.2)';
+                    e.currentTarget.style.transform = 'translateY(-10px) rotate(-2deg) scale(1.02)';
+                    e.currentTarget.style.boxShadow = THEME.shadowHover;
+                    const img = e.currentTarget.querySelector('img');
+                    if(img) img.style.transform = 'scale(1.2) rotate(10deg)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'rotate(0deg) scale(1)';
-                    e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.15)';
+                    e.currentTarget.style.transform = 'translateY(0) rotate(0deg) scale(1)';
+                    e.currentTarget.style.boxShadow = THEME.shadow;
+                    const img = e.currentTarget.querySelector('img');
+                    if(img) img.style.transform = 'scale(1) rotate(0deg)';
                   }}
+                  onMouseDown={(e) => { e.currentTarget.style.transform = 'translateY(12px)'; e.currentTarget.style.boxShadow = THEME.shadowActive; }}
+                  onMouseUp={(e) => { e.currentTarget.style.transform = 'translateY(-10px) rotate(-2deg) scale(1.02)'; e.currentTarget.style.boxShadow = THEME.shadowHover; }}
                 >
+                  {/* Glint effect overlay */}
+                  <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)', animation: 'glint 4s infinite ease-in-out', pointerEvents: 'none' }} />
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                    <img src={story.image} alt="" style={{ height: '40px', borderRadius: '8px' }} />
+                    <img src={story.image} alt="" style={{ height: '40px', borderRadius: '8px', transition: THEME.transition }} />
                     <span style={{ fontSize: '16px' }}>{story.title}</span>
                   </div>
                 </button>
@@ -636,32 +795,15 @@ const App = () => {
             fontFamily: COMIC_FONT,
           }}>
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px', textAlign: isMobile ? 'center' : 'left' }}>
-              <button
-                onClick={() => navigate('/blog')}
-                style={{
-                  alignSelf: isMobile ? 'center' : 'flex-start',
-                  padding: '10px 30px',
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                  color: '#fff',
-                  backgroundColor: '#555',
-                  border: '4px solid rgba(255,255,255,0.3)',
-                  borderRadius: '40px 15px 35px 20px',
-                  cursor: PIXEL_HAND,
-                  boxShadow: '0 8px 15px rgba(0,0,0,0.2)',
-                  transition: 'all 0.2s',
-                  outline: 'none'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1) rotate(-2deg)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1) rotate(0deg)'}
-              >
-                Back
-              </button>
+              <BackBtn onClick={() => navigate('/blog')} isMobile={isMobile} />
               <div style={{ fontSize: '20px', lineHeight: '1.6' }}>
                 <h2 style={{ fontSize: '28px', color: isDark ? '#5c7cff' : '#0033cc', marginTop: 0, marginBottom: '16px', borderBottom: `1px solid ${colors.border}`, paddingBottom: '8px' }}>
                   {currentStory.title}
                 </h2>
-                <div style={{ fontSize: '18px', lineHeight: '1.7', textAlign: 'left', opacity: 0.9 }}>
+                <div style={{ 
+                  fontSize: '18px', lineHeight: '1.8', textAlign: 'left', backgroundColor: 'rgba(0,0,0,0.02)', padding: '25px', borderRadius: '20px', border: `1px solid ${colors.border}`,
+                  boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.02)'
+                }}>
                   {blogContent ? (
                     <>
                       <ReactMarkdown 
@@ -703,15 +845,8 @@ const App = () => {
               }} 
             />
           </div>
-        ) : (
-          [
-            { label: 'Hobbies', path: '/hobbies', color: '#FF5733', image: 'https://static.thenounproject.com/png/3683675-200.png' },
-            { label: 'Favourite Food', path: '/food', color: '#FFBD33', image: 'https://i.etsystatic.com/21829091/r/il/65a572/6400668980/il_570xN.6400668980_eaf8.jpg' },
-            { label: 'Favourite Sports', path: '/sports', color: '#75FF33', image: 'https://i.etsystatic.com/50930003/r/il/189b75/5941058199/il_1588xN.5941058199_h6vz.jpg' },
-            { label: 'Favourite Music', path: '/music', color: '#33FFBD', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJfQ_KIGekKxvEmjG-r1ymoLl2cjQpZEezuw&s' },
-            { label: 'Favourite Games and TV', path: '/gamesandtv', color: '#3357FF', image: 'https://freesvg.org/img/Raseone-tv.png' },
-            { label: 'My Blog', path: '/blog', color: '#8333FF', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIf4R5qPKHPNMyAqV-FjS_OTBB8pfUV29Phg&s' }
-          ].map((item) => (
+        ) : currentPath === '/' ? (
+          MENU_ITEMS.map((item) => (
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
@@ -720,34 +855,133 @@ const App = () => {
                 fontSize: '22px',
                 fontWeight: 'bold',
                 color: '#fff',
-                backgroundColor: item.color,
+                backgroundColor: item.color || '#888',
                 border: '4px solid rgba(255,255,255,0.4)',
                 borderRadius: '30px 90px 40px 100px',
                 cursor: PIXEL_HAND,
-                boxShadow: '0 10px 20px rgba(0,0,0,0.15), inset 0 -5px 0 rgba(0,0,0,0.2)',
-                transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                boxShadow: THEME.shadow,
+                transition: THEME.transition,
                 minWidth: '240px',
-                outline: 'none'
+                position: 'relative',
+                overflow: 'hidden',
+                outline: 'none',
+                animation: 'fadeInUp 0.6s ease-out forwards'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'rotate(-3deg) scale(1.08)';
-                e.currentTarget.style.boxShadow = '0 15px 25px rgba(0,0,0,0.2)';
+                e.currentTarget.style.transform = 'translateY(-15px) rotate(-3deg) scale(1.05)';
+                e.currentTarget.style.boxShadow = THEME.shadowHover;
+                const img = e.currentTarget.querySelector('img');
+                if(img) img.style.transform = 'scale(1.2) translateY(-10px) rotate(5deg)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'rotate(0deg) scale(1)';
-                e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.15)';
+                e.currentTarget.style.transform = 'translateY(0) rotate(0deg) scale(1)';
+                e.currentTarget.style.boxShadow = THEME.shadow;
+                const img = e.currentTarget.querySelector('img');
+                if(img) img.style.transform = 'scale(1) translateY(0)';
               }}
+              onMouseDown={(e) => { e.currentTarget.style.transform = 'translateY(15px)'; e.currentTarget.style.boxShadow = THEME.shadowActive; }}
+              onMouseUp={(e) => { e.currentTarget.style.transform = 'translateY(-15px) rotate(-3deg) scale(1.05)'; e.currentTarget.style.boxShadow = THEME.shadowHover; }}
             >
+              {/* Glint effect overlay */}
+              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)', animation: 'glint 6s infinite ease-in-out', pointerEvents: 'none' }} />
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
                 {item.image && (
-                  <img src={item.image} alt="" style={{ height: '64px', borderRadius: '12px' }} />
+                  <img src={item.image} alt="" style={{ height: '64px', borderRadius: '12px', transition: THEME.transition }} />
                 )}
                 <span>{item.label}</span>
               </div>
             </button>
           ))
+        ) : (
+          <div style={{ 
+            textAlign: 'center', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            gap: '20px'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: isMobile ? '80px' : '120px',
+              fontWeight: 'bold',
+              color: 'blue'
+            }}>
+              <span>4</span>
+              {/* Black Hole as the '0' */}
+              <div style={{
+                width: isMobile ? '70px' : '100px',
+                height: isMobile ? '70px' : '100px',
+                backgroundColor: '#000',
+                borderRadius: '50%',
+                position: 'relative',
+                margin: isMobile ? '0 5px' : '0 15px',
+                animation: 'blackHolePulse 5s ease-in-out infinite, photonGlow 4s ease-in-out infinite',
+                zIndex: 1
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  width: '180%',
+                  height: '180%',
+                  top: '-40%',
+                  left: '-40%',
+                  background: 'conic-gradient(from 0deg, transparent, rgba(0, 51, 204, 0.8), transparent 40%, rgba(255, 255, 255, 0.4), transparent)',
+                  borderRadius: '50%',
+                  animation: 'accretionSpin 2s linear infinite',
+                  filter: 'blur(8px)',
+                  opacity: 0.7
+                }} />
+                <div style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  border: '1px solid rgba(255, 255, 255, 0.8)',
+                  borderRadius: '50%',
+                  boxShadow: '0 0 10px #fff'
+                }} />
+              </div>
+              <span>4</span>
+            </div>
+
+            <h2 style={{ fontSize: '32px', marginBottom: '10px' }}>Oops! 404! Click to go back</h2>
+            
+            <BackBtn onClick={() => navigate('/')} isMobile={isMobile} />
+          </div>
         )}
+        </ErrorBoundary>
       </main>
+
+      <DraggableModal 
+        isOpen={!!modalData} 
+        onClose={() => setModalData(null)} 
+        title={modalData?.title || ''}
+        isMobile={isMobile}
+      >
+        {modalData?.type === 'video' ? (
+          <iframe 
+            width="100%" height="400" src={modalData.url} 
+            title="YouTube video player" frameBorder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowFullScreen style={{ display: 'block', borderRadius: '12px' }}
+          />
+        ) : (
+          <div style={{ textAlign: 'center', padding: '10px 0', overflowY: 'auto', maxHeight: '60vh' }}>
+            {modalData?.screenshots && modalData.screenshots.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                {modalData.screenshots.map((src, i) => (
+                  <img key={i} src={src} alt={`Screenshot ${i + 1}`} style={{ width: '100%', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }} />
+                ))}
+              </div>
+            ) : (
+              <div style={{ opacity: 0.6, padding: '60px 0', fontSize: '24px', color: '#333' }}>
+                📸 No screenshots here yet! Stay tuned for the Cosmos update.
+              </div>
+            )}
+          </div>
+        )}
+      </DraggableModal>
     </div>
   );
 };
