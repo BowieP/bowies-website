@@ -39,7 +39,7 @@ const HOBBIES_DATA = {
   rotate: '12deg',
   items: [
     { label: 'Coding', text: 'I love tech and coding cool things, and I am the founder of Code Cosmos!', link: 'https://bowie.pages.codecosmos.net/blog/mycodingjourney20-04-26'  },
-    { label: 'Sports', text: 'I love playing sport like swimming, football, basketball, dancing and more!', link: 'https://bowie.pages.codecosmos.net/sports' },
+    { label: 'Sports', text: 'I love playing sport like swimming, football, basketball, dancing, dodgeball and more!', link: 'https://bowie.pages.codecosmos.net/sports' },
     { label: 'Gaming', text: 'I love board and video games, like Minecraft and Scrabble!', link: 'https://bowie.pages.codecosmos.net/gamesandtv' },
     { label: 'Music', text: 'I love listening to music, both accapela, instrumental and both!', link: 'https://bowie.pages.codecosmos.net/music' }
   ]
@@ -75,17 +75,46 @@ const FOOD_DATA = {
   ]
 };
 
+const SPORTS_DATA = {
+  title: "My Favourite Sports",
+  icon: "https://cdn-icons-png.flaticon.com/512/3163/3163636.png",
+  rotate: '5deg',
+  items: [
+    { label: 'Basketball', image: 'https://cdn-icons-png.flaticon.com/512/889/889455.png', text: 'I love basketball because it is fun to dribble and shoot hoops!' },
+    { label: 'Football', image: 'https://i.etsystatic.com/50930003/r/il/189b75/5941058199/il_1588xN.5941058199_h6vz.jpg', text: "I don't play much, but I love watching it!" },
+    { label: 'Swimming', image: 'https://freesvg.org/img/1652857927swimmer-swimming.png', text: 'Swimming is refreshing and great for staying active!' },
+    { label: 'Dancing', image: 'https://cdn-icons-png.flaticon.com/512/3048/3048398.png', text: 'Dancing is a fun way to express yourself and stay fit!' },
+    { label: 'Dodgeball', image: 'https://cdn.prod.website-files.com/5b44edefca321a1e2d0c2aa6/5fbc2c593bb575208967468b_Dimensions-Sports-Dodgeball-Icon.svg', text: 'Dodgeball is an intense and exciting game where you have to be quick to avoid the balls!' }
+  ]
+};
+
 const PROJECTS_DATA = {
   title: "My Coding Projects",
   icon: "https://cdn-icons-png.flaticon.com/512/1005/1005141.png",
   rotate: '-5deg',
   items: [
-    { label: 'Code Cosmos', image: 'https://kidvids.codecosmos.net/logo2.png', text: 'The main hub for my network of apps and sites.', link: 'https://codecosmos.net', videoModalUrl: 'https://youtube.com/embed/4kOt-SI_trw' },
-    { label: 'KidVids', image: 'https://kidvids.codecosmos.net/logo.png', text: 'A video platform similar to YouTube. Not finished.', link: 'https://kidvids.codecosmos.net', hasScreenshots: true },
-    { label: 'A Clicker Game', image: 'https://cdn.makecode.com/blob/9ab4abfcdff3405e5cca8a3c38e129aec2b363e3/static/logo.png', text: 'A fun game I built to practice state management and animations. In MakeCode Arcade.', link: 'https://arcade.makecode.com/S57641-09029-27229-92314', hasScreenshots: true },
-    { label: 'Personal Site', image: 'https://bowie.pages.codecosmos.net/favicon.png', text: 'The site you are looking at right now! Built with React and CSS animations.', link: 'https://bowie.pages.codecosmos.net', hasScreenshots: true },
+    { label: 'Code Cosmos', category: 'Web', image: 'https://kidvids.codecosmos.net/logo2.png', text: 'The main hub for my network of apps and sites.', link: 'https://codecosmos.net', videoModalUrl: 'https://youtube.com/embed/4kOt-SI_trw' },
     { 
-      label: ' Bowies Cookie Clicker', 
+      label: 'KidVids', 
+      category: 'Web',
+      image: 'https://kidvids.codecosmos.net/logo.png', 
+      text: 'A video platform similar to YouTube. Not finished.', 
+      link: 'https://kidvids.codecosmos.net', 
+      hasScreenshots: true,
+      screenshots: [
+        'https://lh3.googleusercontent.com/d/1I-F8U2f0DcTre4rkrReeA6stwmktfip4',
+        'https://lh3.googleusercontent.com/d/10MsitUCusueINW4V3nQliTNMPW6vX6vI',
+        'https://lh3.googleusercontent.com/d/1RhG7HwWkDLW-rYdJNNGYGLjpGuMpxV3_',
+        'https://lh3.googleusercontent.com/d/1ChI6pd__FFKrSYniK3yV6s6Npiqv-iJQ',
+        'https://lh3.googleusercontent.com/d/1apgr-GYViILUSZ4x1jptfvKqZv6OKRhj',
+        'https://lh3.googleusercontent.com/d/1mB2tY8bhM0Y_hQ1k6s4sk3RMh6hFX7VN'
+      ]
+    },
+    { label: 'A Clicker Game', category: 'Game', image: 'https://cdn.makecode.com/blob/9ab4abfcdff3405e5cca8a3c38e129aec2b363e3/static/logo.png', text: 'A fun game I built to practice state management and animations. In MakeCode Arcade.', link: 'https://arcade.makecode.com/S57641-09029-27229-92314', hasScreenshots: true },
+    { label: 'Personal Site', category: 'Web', image: 'https://bowie.pages.codecosmos.net/favicon.png', text: 'The site you are looking at right now! Built with React and CSS animations.', link: 'https://bowie.pages.codecosmos.net', hasScreenshots: true },
+    {
+      label: "Bowie's Cookie Clicker",
+      category: 'Game',
       image: 'https://bowie.pages.codecosmos.net/bowiescookieclickerlogo.jpeg', 
       text: 'I tried to make a copy of Cookie Clicker in JSX. Built on Google Gemini Canvas.', 
       hasScreenshots: true,
@@ -99,6 +128,7 @@ const PROJECTS_DATA = {
     },
     {
       label: 'Bean Royale',
+      category: '3D Game',
       image: 'https://bowie.pages.codecosmos.net/beanroyalelogo.png',
       text: 'I made this game on Gemini AI Canvas and i used HTML and three.js!',
       videoModalUrl: 'https://youtube.com/embed/PlbVV_Ao1zM',
@@ -166,80 +196,118 @@ const BackBtn = ({ onClick, isMobile }) => (
   </button>
 );
 
-const SubMenuListView = ({ title, items, icon, rotate, isMobile, onBack, onAction = () => {}, iconMaxHeight = '400px' }) => (
-  <div style={{
-    display: 'flex',
-    flexDirection: isMobile ? 'column' : 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    maxWidth: isMobile ? '100%' : '1000px',
-    gap: isMobile ? '30px' : '80px',
-    padding: isMobile ? '20px' : '0',
-    fontFamily: COMIC_FONT,
-  }}>
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px', textAlign: isMobile ? 'center' : 'left' }}>
-      <BackBtn onClick={onBack} isMobile={isMobile} />
-      {title && <h2 style={{ fontSize: '32px', color: '#0033cc', marginTop: 0, marginBottom: '20px', letterSpacing: '-0.02em' }}>{title}</h2>}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        {items.map((item, idx) => (
-          <div key={idx} style={{ 
-            display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: '20px', fontSize: '18px', lineHeight: '1.6',
-            backgroundColor: 'rgba(0,51,204,0.03)', padding: '15px', borderRadius: '15px', border: '1px solid rgba(0,51,204,0.1)', 
-            animation: `fadeInUp 0.4s ease forwards ${idx * 0.1}s`, opacity: 0,
-            transition: THEME.transition, cursor: PIXEL_HAND
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(0,51,204,0.06)';
-            e.currentTarget.style.transform = 'translateX(10px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(0,51,204,0.03)';
-            e.currentTarget.style.transform = 'translateX(0)';
-          }}>
-            {item.image && <img src={item.image} alt={item.label} style={{ height: '70px', width: '70px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0, boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />}
-            <p style={{ margin: 0 }}>
-              <strong>{item.label}</strong> - {item.text}
-              {item.link && (
-                <>
-                  <br/> 
-                  <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ color: 'blue', textDecoration: 'none' }}>{item.link.replace('https://', '')}</a>
-                </>
-              )}
-              {item.videoModalUrl && (
-                <span 
-                  onClick={(e) => { e.stopPropagation(); onAction({ type: 'video', url: item.videoModalUrl, title: item.label }); }}
-                  style={{ marginLeft: '10px', color: '#FF0000', cursor: PIXEL_HAND, fontWeight: 'bold', textDecoration: 'underline', fontSize: '14px' }}
-                >
-                  video
-                </span>
-              )}
-              {item.hasScreenshots && (
-                <span 
-                  onClick={(e) => { e.stopPropagation(); onAction({ type: 'screenshots', title: item.label, screenshots: item.screenshots }); }}
-                  style={{ marginLeft: '10px', color: '#28a745', cursor: PIXEL_HAND, fontWeight: 'bold', textDecoration: 'underline', fontSize: '14px' }}
-                >
-                  screenshots
-                </span>
-              )}
-            </p>
+const SubMenuListView = ({ title, items, icon, rotate, isMobile, onBack, onAction = () => {}, iconMaxHeight = '400px' }) => {
+  const [activeCategory, setActiveCategory] = React.useState('All');
+  
+  // Get unique categories from items
+  const categories = ['All', ...new Set(items.map(item => item.category).filter(Boolean))];
+  const filteredItems = activeCategory === 'All' ? items : items.filter(item => item.category === activeCategory);
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row',
+      alignItems: isMobile ? 'stretch' : 'center',
+      justifyContent: 'center',
+      width: '100%',
+      maxWidth: isMobile ? '100%' : '1000px',
+      gap: isMobile ? '30px' : '80px',
+      padding: isMobile ? '10px 0' : '0',
+      fontFamily: COMIC_FONT,
+    }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: isMobile ? '16px' : '24px', textAlign: isMobile ? 'center' : 'left', width: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start' }}>
+          <BackBtn onClick={onBack} isMobile={isMobile} />
+        </div>
+        {title && <h2 style={{ fontSize: isMobile ? '24px' : '32px', color: '#0033cc', marginTop: 0, marginBottom: isMobile ? '10px' : '20px', letterSpacing: '-0.02em', padding: isMobile ? '0 10px' : '0' }}>{title}</h2>}
+        
+        {/* Category Filter Bar */}
+        {categories.length > 1 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '10px', justifyContent: isMobile ? 'center' : 'flex-start' }}>
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                style={{
+                  padding: '6px 14px', borderRadius: '20px', border: '2px solid #0033cc', cursor: PIXEL_HAND,
+                  backgroundColor: activeCategory === cat ? '#0033cc' : 'transparent',
+                  color: activeCategory === cat ? '#fff' : '#0033cc',
+                  fontSize: '14px', fontWeight: 'bold', transition: 'all 0.2s'
+                }}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
-        ))}
+        )}
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '12px' : '20px' }}>
+          {filteredItems.map((item, idx) => (
+            <div key={item.label + idx} style={{ 
+            display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? '12px' : '20px', fontSize: isMobile ? '16px' : '18px', lineHeight: '1.6',
+            backgroundColor: 'rgba(0,51,204,0.03)', padding: isMobile ? '12px' : '15px', borderRadius: '15px', border: '1px solid rgba(0,51,204,0.1)', 
+              animation: `fadeInUp 0.4s ease forwards`,
+              transition: THEME.transition, cursor: PIXEL_HAND
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(0,51,204,0.06)';
+              e.currentTarget.style.transform = 'translateX(10px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(0,51,204,0.03)';
+              e.currentTarget.style.transform = 'translateX(0)';
+            }}>
+              {item.image && <img src={item.image} alt={item.label} referrerPolicy="no-referrer" style={{ height: isMobile ? '60px' : '70px', width: isMobile ? '60px' : '70px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0, boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />}
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: isMobile ? 'center' : 'flex-start' }}>
+                  <strong>{item.label}</strong>
+                  {item.category && <span style={{ fontSize: '10px', backgroundColor: '#0033cc', color: '#fff', padding: '2px 8px', borderRadius: '10px', textTransform: 'uppercase' }}>{item.category}</span>}
+                </div>
+                <p style={{ margin: '5px 0 0 0' }}>
+                  {item.text}
+                  {item.link && (
+                    <>
+                      <br/> 
+                      <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ color: 'blue', textDecoration: 'none' }}>{item.link.replace('https://', '')}</a>
+                    </>
+                  )}
+                  {item.videoModalUrl && (
+                    <span 
+                      onClick={(e) => { e.stopPropagation(); onAction({ type: 'video', url: item.videoModalUrl, title: item.label }); }}
+                      style={{ marginLeft: '10px', color: '#FF0000', cursor: PIXEL_HAND, fontWeight: 'bold', textDecoration: 'underline', fontSize: '14px' }}
+                    >
+                      video
+                    </span>
+                  )}
+                  {item.hasScreenshots && (
+                    <span 
+                      onClick={(e) => { e.stopPropagation(); onAction({ type: 'screenshots', title: item.label, screenshots: item.screenshots }); }}
+                      style={{ marginLeft: '10px', color: '#28a745', cursor: PIXEL_HAND, fontWeight: 'bold', textDecoration: 'underline', fontSize: '14px' }}
+                    >
+                      screenshots
+                    </span>
+                  )}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
+      <img 
+        src={icon} 
+        alt="Menu Icon" 
+        style={{ 
+          height: 'auto',
+          maxHeight: isMobile ? '120px' : iconMaxHeight,
+          maxWidth: isMobile ? '80%' : '100%',
+          transform: `rotate(${rotate})`,
+          filter: 'drop-shadow(10px 10px 0px rgba(0,0,0,0.05))',
+          marginTop: isMobile ? '20px' : '0'
+        }} 
+      />
     </div>
-    <img 
-      src={icon} 
-      alt="Menu Icon" 
-      style={{ 
-        height: 'auto',
-        maxHeight: isMobile ? '200px' : iconMaxHeight,
-        maxWidth: isMobile ? '80%' : '100%',
-        transform: `rotate(${rotate})`,
-        filter: 'drop-shadow(10px 10px 0px rgba(0,0,0,0.05))'
-      }} 
-    />
-  </div>
-);
+  );
+};
 
 // --- Draggable Modal Component ---
 const DraggableModal = ({ isOpen, onClose, title, children, isMobile }) => {
@@ -407,9 +475,9 @@ const HeaderBrandingSnippet = ({ isMobile, colors, isDark, toggleTheme }) => {
           style={{ position: 'relative', display: 'flex', alignItems: 'center' }}
         >
           <a href="https://codecosmos.net" style={grayscaleHeaderItem}>
-            <img src="https://kidvids.codecosmos.net/logo2.png" alt="Logo" style={{ height: '20px', marginRight: '10px' }} />
+            <img src="https://kidvids.codecosmos.net/logo2.png" alt="Logo" referrerPolicy="no-referrer" style={{ height: '20px', marginRight: '10px' }} />
             <span style={{ fontWeight: 500 }}>
-              {isMobile ? "Pages" : "Hosted through Code Cosmos Pages"}
+            {isMobile ? "Home" : "Bowie's Official Site"}
             </span>
           </a>
           <InfoBubble isVisible={codeCosmosHover} side="left" isMobile={isMobile} colors={colors}>
@@ -503,6 +571,7 @@ const App = () => {
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     const handlePopState = () => setCurrentPath(window.location.pathname);
+
     window.addEventListener('resize', handleResize);
     window.addEventListener('popstate', handlePopState);
     return () => {
@@ -511,11 +580,35 @@ const App = () => {
     };
   }, []);
 
+  // Dynamic Title & Metadata Management
+  React.useEffect(() => {
+    let pageTitle = "Bowie's Stuff";
+    
+    if (currentPath === '/') {
+      pageTitle = "Bowie's Stuff";
+    } else if (currentStory) {
+      pageTitle = `Bowie's Stuff - ${currentStory.title}`;
+    } else {
+      const menuItem = MENU_ITEMS.find(item => item.path === currentPath);
+      if (menuItem) {
+        pageTitle = `Bowie's Stuff - ${menuItem.label}`;
+      } else {
+        pageTitle = "Bowie's Stuff - 404 Not Found";
+      }
+    }
+
+    document.title = pageTitle;
+    ['title', 'og:title', 'twitter:title'].forEach(name => {
+      const el = document.querySelector(`meta[name="${name}"], meta[property="${name}"]`);
+      if (el) el.setAttribute('content', pageTitle);
+    });
+  }, [currentPath, currentStory]);
+
   // Fetch blog content when navigating to a story
   React.useEffect(() => {
     if (currentStory && storySlug) {
       setBlogContent(''); // Clear previous content while loading new story
-      fetch(`/blogs/${storySlug}.md`, { cache: 'no-cache' })
+      fetch(`/blogs/${storySlug}.md`)
         .then(res => {
           if (!res.ok) throw new Error("File not found");
           return res.text();
@@ -691,10 +784,10 @@ const App = () => {
         flex: 1,
         display: 'flex',
         flexWrap: 'wrap',
-        alignItems: 'center',
+        alignItems: isMobile ? 'flex-start' : 'center',
         justifyContent: 'center',
-        gap: '30px',
-        padding: '24px',
+        gap: isMobile ? '20px' : '30px',
+        padding: isMobile ? '16px' : '24px',
         position: 'relative'
       }}>
         <ErrorBoundary>
@@ -713,6 +806,12 @@ const App = () => {
         ) : currentPath === '/food' ? (
           <SubMenuListView 
             {...FOOD_DATA} 
+            isMobile={isMobile} 
+            onBack={() => navigate('/')} 
+          />
+        ) : currentPath === '/sports' ? (
+          <SubMenuListView 
+            {...SPORTS_DATA} 
             isMobile={isMobile} 
             onBack={() => navigate('/')} 
           />
@@ -971,7 +1070,7 @@ const App = () => {
             {modalData?.screenshots && modalData.screenshots.length > 0 ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {modalData.screenshots.map((src, i) => (
-                  <img key={i} src={src} alt={`Screenshot ${i + 1}`} style={{ width: '100%', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }} />
+                  <img key={i} src={src} alt={`Screenshot ${i + 1}`} referrerPolicy="no-referrer" style={{ width: '100%', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }} />
                 ))}
               </div>
             ) : (
