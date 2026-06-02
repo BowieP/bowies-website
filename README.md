@@ -14,7 +14,7 @@ Hey there, I'm **Bowie**! When I'm not writing lines of code or building digital
 ---
 
 ## 🛠️ Tech Stack
-This entire portal is built using space-grade tools:
+This entire portal is built using professional tools:
 * **Vite & React** (For a lightning-fast frontend)
 * **Lucide React** (For beautiful vector icons)
 * **Firebase** (Ready for launching on `bowie.pages.codecosmos.net`)
