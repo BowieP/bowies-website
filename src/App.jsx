@@ -93,6 +93,7 @@ const PROJECTS_DATA = {
   icon: "https://cdn-icons-png.flaticon.com/512/1005/1005141.png",
   rotate: '-5deg',
   items: [
+    { label: 'StarCoder', category: 'Web', image: 'https://starcoder.codecosmos.net/logo.png', text: 'A website designed to teach coding in blocks and JavaScript plus sharing and challenges!', link: 'https://starcoder.codecosmos.net' },
     { label: 'Code Cosmos', category: 'Web', image: 'https://kidvids.codecosmos.net/logo2.png', text: 'The main hub for my network of apps and sites.', link: 'https://codecosmos.net', videoModalUrl: 'https://youtube.com/embed/4kOt-SI_trw' },
     { 
       label: 'KidVids', 
@@ -154,11 +155,14 @@ const MENU_ITEMS = [
   { label: 'My Blog', path: '/blog', color: '#8333FF', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIf4R5qPKHPNMyAqV-FjS_OTBB8pfUV29Phg&s' }
 ];
 
-// --- Cursor Constants ---
-const PIXEL_HAND = 'url("https://unpkg.com/nes.css@latest/assets/cursor-click.png"), pointer';
-const PIXEL_ARROW = 'url("https://unpkg.com/nes.css@latest/assets/cursor-pointer.png"), auto';
+// --- Cursor Configurations ---
+const FINGER_CURSOR = 'url("https://raw.githubusercontent.com/Anu-Panda/Roblox-Cursor/master/ArrowFarCursor.png"), auto';
+const FINGER_CLICK = 'url("https://raw.githubusercontent.com/Anu-Panda/Roblox-Cursor/master/ArrowCursor.png") 0 0, pointer';
+
+// --- Global Font ---
 const COMIC_FONT = '"Comic Neue", "Chalkboard SE", "Comic Sans MS", "Comic Sans", cursive';
 
+// --- Global Theme Properties ---
 const THEME = {
   shadow: '0 12px 0 rgba(0,0,0,0.2)',
   shadowHover: '0 16px 0 rgba(0,0,0,0.15)',
@@ -166,6 +170,14 @@ const THEME = {
   glass: 'rgba(255, 255, 255, 0.05)',
   transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
   glow: '0 0 20px rgba(0, 51, 204, 0.3)'
+};
+
+const THEME_CONFIG = {
+  light: { bg: '#ffffff', text: '#1a1a1a', border: '#eaeaea', cardBg: '#fff' },
+  dark: { bg: '#121212', text: '#e0e0e0', border: '#333', cardBg: '#1e1e1e' },
+  jungle: { bg: '#0a1a0a', text: '#e0ffe0', border: '#1a331a', cardBg: '#142614' },
+  sunset: { bg: '#2d142c', text: '#ffd460', border: '#510a32', cardBg: '#420b2f' },
+  cosmos: { bg: '#020008', text: '#f0f0f0', border: '#1a1a2e', cardBg: '#0f0f1b' }
 };
 
 // --- UI Helper Components ---
@@ -177,11 +189,10 @@ const BackBtn = ({ onClick, isMobile }) => (
       padding: '10px 28px',
       fontSize: '15px',
       fontWeight: 'bold',
-      color: '#fff',
+    color: THEME_CONFIG.light.text, // Always readable on button
       backgroundColor: '#555',
       border: '4px solid rgba(255,255,255,0.3)',
       borderRadius: '40px 15px 35px 20px',
-      cursor: PIXEL_HAND,
       fontFamily: COMIC_FONT,
       boxShadow: THEME.shadow,
       transition: THEME.transition,
@@ -229,7 +240,7 @@ const SubMenuListView = ({ title, items, icon, rotate, isMobile, onBack, onActio
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
                 style={{
-                  padding: '6px 14px', borderRadius: '20px', border: '2px solid #0033cc', cursor: PIXEL_HAND,
+                  padding: '6px 14px', borderRadius: '20px', border: '2px solid #0033cc',
                   backgroundColor: activeCategory === cat ? '#0033cc' : 'transparent',
                   color: activeCategory === cat ? '#fff' : '#0033cc',
                   fontSize: '14px', fontWeight: 'bold', transition: 'all 0.2s'
@@ -247,7 +258,7 @@ const SubMenuListView = ({ title, items, icon, rotate, isMobile, onBack, onActio
             display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? '12px' : '20px', fontSize: isMobile ? '16px' : '18px', lineHeight: '1.6',
             backgroundColor: 'rgba(0,51,204,0.03)', padding: isMobile ? '12px' : '15px', borderRadius: '15px', border: '1px solid rgba(0,51,204,0.1)', 
               animation: `fadeInUp 0.4s ease forwards`,
-              transition: THEME.transition, cursor: PIXEL_HAND
+              transition: THEME.transition
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = 'rgba(0,51,204,0.06)';
@@ -274,7 +285,7 @@ const SubMenuListView = ({ title, items, icon, rotate, isMobile, onBack, onActio
                   {item.videoModalUrl && (
                     <span 
                       onClick={(e) => { e.stopPropagation(); onAction({ type: 'video', url: item.videoModalUrl, title: item.label }); }}
-                      style={{ marginLeft: '10px', color: '#FF0000', cursor: PIXEL_HAND, fontWeight: 'bold', textDecoration: 'underline', fontSize: '14px' }}
+                      style={{ marginLeft: '10px', color: '#FF0000', fontWeight: 'bold', textDecoration: 'underline', fontSize: '14px' }}
                     >
                       video
                     </span>
@@ -282,7 +293,7 @@ const SubMenuListView = ({ title, items, icon, rotate, isMobile, onBack, onActio
                   {item.hasScreenshots && (
                     <span 
                       onClick={(e) => { e.stopPropagation(); onAction({ type: 'screenshots', title: item.label, screenshots: item.screenshots }); }}
-                      style={{ marginLeft: '10px', color: '#28a745', cursor: PIXEL_HAND, fontWeight: 'bold', textDecoration: 'underline', fontSize: '14px' }}
+                      style={{ marginLeft: '10px', color: '#28a745', fontWeight: 'bold', textDecoration: 'underline', fontSize: '14px' }}
                     >
                       screenshots
                     </span>
@@ -296,6 +307,7 @@ const SubMenuListView = ({ title, items, icon, rotate, isMobile, onBack, onActio
       <img 
         src={icon} 
         alt="Menu Icon" 
+        referrerPolicy="no-referrer"
         style={{ 
           height: 'auto',
           maxHeight: isMobile ? '120px' : iconMaxHeight,
@@ -359,8 +371,8 @@ const DraggableModal = ({ isOpen, onClose, title, children, isMobile }) => {
         border: '5px solid #0033cc', overflow: 'hidden'
       }}>
         <div onMouseDown={onMouseDown} style={{ padding: '15px 25px', backgroundColor: '#0033cc', color: '#fff', cursor: 'move', display: 'flex', justifyContent: 'space-between', alignItems: 'center', userSelect: 'none' }}>
-          <span style={{ fontWeight: 'bold', fontSize: '20px' }}>{title}</span>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '32px', cursor: PIXEL_HAND, lineHeight: '0.8', padding: '0 5px' }}>×</button>
+          <span style={{ fontWeight: 'bold', fontSize: '20px', cursor: 'move' }}>{title}</span>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '32px', lineHeight: '0.8', padding: '0 5px' }}>×</button>
         </div>
         <div style={{ padding: '25px', backgroundColor: '#fff', minHeight: '300px' }}>{children}</div>
       </div>
@@ -433,7 +445,7 @@ const InfoBubble = ({ isVisible, children, isMobile, colors, top = '30px', side 
 };
 
 // --- Header Component ---
-const HeaderBrandingSnippet = ({ isMobile, colors, isDark, toggleTheme }) => {
+const HeaderBrandingSnippet = ({ isMobile, colors, isDark, onOpenSettings }) => {
   // Hover states for the different branding items
   const [codeCosmosHover, setCodeCosmosHover] = React.useState(false);
   const [youtubeHover, setYoutubeHover] = React.useState(false);
@@ -449,7 +461,6 @@ const HeaderBrandingSnippet = ({ isMobile, colors, isDark, toggleTheme }) => {
     textDecoration: 'none',
     color: isDark ? '#bbb' : '#333',
     transition: 'opacity 0.2s',
-    cursor: PIXEL_HAND,
   };
 
   return (
@@ -463,8 +474,7 @@ const HeaderBrandingSnippet = ({ isMobile, colors, isDark, toggleTheme }) => {
       fontSize: '13px',
       position: 'relative',
       zIndex: 60,
-      backgroundColor: colors.bg,
-      cursor: PIXEL_ARROW
+      backgroundColor: colors.bg
     }}>
       {/* Left Side: Branding & Founder Info */}
       <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '12px' : '24px' }}>
@@ -504,17 +514,18 @@ const HeaderBrandingSnippet = ({ isMobile, colors, isDark, toggleTheme }) => {
       {/* Right Side: Socials & External Links */}
       <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '10px' : '20px', position: 'relative' }}>
         
-        {/* Theme Toggle */}
+        {/* Settings Button */}
         <button 
-          onClick={toggleTheme}
+          onClick={onOpenSettings}
           style={{
-            background: 'none', border: 'none', cursor: PIXEL_HAND, padding: '4px',
-            display: 'flex', alignItems: 'center', transition: 'transform 0.2s'
+            background: 'none', border: 'none', padding: '4px',
+            display: 'flex', alignItems: 'center', transition: 'transform 0.2s',
+            fontSize: '20px'
           }}
           onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.2) rotate(15deg)'}
           onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1) rotate(0deg)'}
         >
-          {isDark ? '🌙' : '☀️'}
+          ⚙️
         </button>
         
         {/* YouTube */}
@@ -559,13 +570,21 @@ const HeaderBrandingSnippet = ({ isMobile, colors, isDark, toggleTheme }) => {
 // --- Main App Component ---
 const App = () => {
   const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
-  const [theme, setTheme] = React.useState('light'); 
+  const [theme, setTheme] = React.useState(() => {
+    const saved = localStorage.getItem('bowies[theme]');
+    return THEME_CONFIG[saved] ? saved : 'light';
+  });
   const [currentPath, setCurrentPath] = React.useState(window.location.pathname);
   const [blogContent, setBlogContent] = React.useState('');
   const [modalData, setModalData] = React.useState(null);
-  const isDark = theme === 'dark';
+  const isDark = theme !== 'light';
   const storySlug = currentPath.startsWith('/blog/') ? currentPath.split('/').pop() : null;
   const currentStory = STORIES[storySlug];
+
+  // Persist theme to localStorage
+  React.useEffect(() => {
+    localStorage.setItem('bowies[theme]', theme);
+  }, [theme]);
 
   // Handle window resizing and navigation
   React.useEffect(() => {
@@ -586,6 +605,8 @@ const App = () => {
     
     if (currentPath === '/') {
       pageTitle = "Bowie's Stuff";
+    } else if (currentPath === '/settings') {
+      pageTitle = "Bowie's Stuff - Settings";
     } else if (currentStory) {
       pageTitle = `Bowie's Stuff - ${currentStory.title}`;
     } else {
@@ -629,18 +650,64 @@ const App = () => {
     setCurrentPath(path);
   };
 
-  const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  const colors = THEME_CONFIG[theme] || THEME_CONFIG.light;
 
-  const colors = {
-    bg: isDark ? '#121212' : '#ffffff',
-    text: isDark ? '#e0e0e0' : '#1a1a1a',
-    border: isDark ? '#333' : '#eaeaea',
-    cardBg: isDark ? '#1e1e1e' : '#fff'
+  const getDynamicBg = () => {
+    if (currentPath === '/sports') {
+      return {
+        backgroundColor: isDark ? '#0a1a0a' : '#f0fff4',
+        backgroundImage: `radial-gradient(circle at 2px 2px, ${isDark ? 'rgba(0, 255, 0, 0.05)' : 'rgba(0, 128, 0, 0.1)'} 1px, transparent 0)`,
+        backgroundSize: '40px 40px'
+      };
+    }
+    if (currentPath === '/projects') {
+      return {
+        backgroundColor: isDark ? '#020008' : '#f5f7ff',
+        backgroundImage: isDark 
+          ? `radial-gradient(circle at 20% 30%, rgba(60, 0, 120, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(0, 40, 100, 0.4) 0%, transparent 50%)`
+          : `radial-gradient(circle at 20% 30%, rgba(100, 150, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(150, 100, 255, 0.1) 0%, transparent 50%)`,
+        backgroundSize: 'cover'
+      };
+    }
+    if (theme === 'jungle') {
+      return {
+        backgroundColor: '#0a1a0a',
+        backgroundImage: `radial-gradient(circle at 2px 2px, rgba(46, 204, 113, 0.05) 1px, transparent 0)`,
+        backgroundSize: '40px 40px'
+      };
+    }
+    if (theme === 'sunset') {
+      return {
+        backgroundColor: '#2d142c',
+        backgroundImage: `linear-gradient(to bottom, #2d142c, #801336)`,
+        backgroundSize: 'cover'
+      };
+    }
+    if (theme === 'cosmos') {
+      return {
+        backgroundColor: '#020008',
+        backgroundImage: `radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px), radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px)`,
+        backgroundSize: '550px 550px, 350px 350px',
+        backgroundPosition: '0 0, 40px 60px'
+      };
+    }
+    if (currentPath === '/settings') {
+      return {
+        backgroundColor: colors.bg,
+        backgroundImage: `radial-gradient(circle at 2px 2px, rgba(0,51,204,0.03) 1px, transparent 0)`,
+        backgroundSize: '30px 30px'
+      };
+    }
+    return {
+      backgroundColor: colors.bg,
+      backgroundImage: `radial-gradient(circle at 2px 2px, rgba(0,51,204,0.05) 1px, transparent 0)`,
+      backgroundSize: '40px 40px'
+    };
   };
 
   return (
     <div style={{
-      backgroundColor: colors.bg,
+      ...getDynamicBg(),
       color: colors.text,
       minHeight: '100vh',
       display: 'flex',
@@ -648,9 +715,7 @@ const App = () => {
       fontFamily: COMIC_FONT,
       overflowX: 'hidden',
       overflowY: 'auto',
-      cursor: PIXEL_HAND,
-      backgroundImage: `radial-gradient(circle at 2px 2px, rgba(0,51,204,0.05) 1px, transparent 0)`,
-      backgroundSize: '40px 40px',
+      transition: 'background-color 0.8s ease, background-image 0.8s ease',
       animation: 'starScroll 60s linear infinite'
     }}>
       <style>
@@ -681,6 +746,14 @@ const App = () => {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.03); }
           }
+        /* Force the custom cursor globally on every element */
+        html, body, * {
+          cursor: ${FINGER_CURSOR} !important;
+        }
+        a, button, [role="button"], input, select, textarea, .clickable, button * {
+          cursor: ${FINGER_CLICK} !important;
+        }
+
           @keyframes photonGlow {
             0%, 100% { box-shadow: 0 0 20px 2px #fff, 0 0 40px 10px #0033cc, 0 0 100px 30px #000; }
             50% { box-shadow: 0 0 30px 5px #fff, 0 0 60px 20px #0033cc, 0 0 130px 50px #000; }
@@ -714,7 +787,7 @@ const App = () => {
         isMobile={isMobile} 
         colors={colors} 
         isDark={isDark} 
-        toggleTheme={toggleTheme}
+        onOpenSettings={() => navigate('/settings')}
       />
       </ErrorBoundary>
 
@@ -748,7 +821,7 @@ const App = () => {
             style={{
               display: 'flex', alignItems: 'center', gap: '8px', padding: isMobile ? '6px 12px' : '8px 20px',
               backgroundColor: '#fff', color: '#000', borderRadius: '12px 6px 14px 8px', border: '3px solid #FF0000',
-              textDecoration: 'none', fontSize: '14px', fontWeight: 'bold', cursor: PIXEL_HAND, boxShadow: THEME.shadow, transition: THEME.transition
+              textDecoration: 'none', fontSize: '14px', fontWeight: 'bold', cursor: FINGER_CLICK, boxShadow: THEME.shadow, transition: THEME.transition
             }}
             onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-6px) rotate(-2deg)'; e.currentTarget.style.boxShadow = THEME.shadowHover; }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0) rotate(0deg)'; e.currentTarget.style.boxShadow = THEME.shadow; }}
@@ -766,7 +839,7 @@ const App = () => {
             style={{
               display: 'flex', alignItems: 'center', gap: '8px', padding: isMobile ? '6px 12px' : '8px 20px',
               backgroundColor: '#333', color: '#fff', borderRadius: '8px 14px 6px 12px', border: '3px solid rgba(255,255,255,0.3)',
-              textDecoration: 'none', fontSize: '14px', fontWeight: 'bold', cursor: PIXEL_HAND, boxShadow: THEME.shadow, transition: THEME.transition
+              textDecoration: 'none', fontSize: '14px', fontWeight: 'bold', cursor: FINGER_CLICK, boxShadow: THEME.shadow, transition: THEME.transition
             }}
             onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-6px) rotate(2deg)'; e.currentTarget.style.boxShadow = THEME.shadowHover; }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0) rotate(0deg)'; e.currentTarget.style.boxShadow = THEME.shadow; }}
@@ -847,7 +920,6 @@ const App = () => {
                     backgroundColor: story.color || '#888',
                     border: '4px solid rgba(255,255,255,0.4)',
                     borderRadius: '30px 90px 40px 100px',
-                    cursor: PIXEL_HAND,
                     boxShadow: THEME.shadow,
                     transition: THEME.transition,
                     minWidth: '180px',
@@ -874,14 +946,61 @@ const App = () => {
                   {/* Glint effect overlay */}
                   <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)', animation: 'glint 4s infinite ease-in-out', pointerEvents: 'none' }} />
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                    <img src={story.image} alt="" style={{ height: '40px', borderRadius: '8px', transition: THEME.transition }} />
+                    <img src={story.image} alt="" referrerPolicy="no-referrer" style={{ height: '40px', borderRadius: '8px', transition: THEME.transition }} />
                     <span style={{ fontSize: '16px' }}>{story.title}</span>
                   </div>
                 </button>
               ))}
             </div>
           </div>
-        ) : currentStory ? (
+        ) : currentPath === '/settings' ? (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            maxWidth: '800px',
+            gap: '24px',
+            padding: isMobile ? '10px' : '0',
+            fontFamily: COMIC_FONT,
+          }}>
+            <BackBtn onClick={() => navigate('/')} isMobile={isMobile} />
+            <h2 style={{ fontSize: isMobile ? '28px' : '36px', color: '#0033cc', margin: 0 }}>Settings</h2>
+            
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '30px', 
+              backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,51,204,0.03)', 
+              padding: isMobile ? '20px' : '40px', 
+              borderRadius: '24px', 
+              border: `1px solid ${colors.border}` 
+            }}>
+              <div>
+                <h3 style={{ marginTop: 0, color: '#0033cc' }}>Themes</h3>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                  {Object.keys(THEME_CONFIG).map(t => (
+                    <button
+                      key={t}
+                      onClick={() => setTheme(t)}
+                      style={{
+                        padding: '12px 24px', borderRadius: '15px', border: `3px solid ${theme === t ? '#0033cc' : '#ccc'}`,
+                        backgroundColor: theme === t ? '#0033cc' : '#fff', color: theme === t ? '#fff' : '#333',
+                        textTransform: 'capitalize', fontWeight: 'bold', fontFamily: COMIC_FONT,
+                        transition: 'all 0.2s', fontSize: '16px'
+                      }}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: '20px' }}>
+                <h3 style={{ color: '#0033cc' }}>Licenses</h3>
+                <p style={{ opacity: 0.6, fontSize: '14px' }}>Nothing here yet. Legal cosmos stuff.</p>
+              </div>
+            </div>
+          </div>
+        ) : (currentStory && storySlug) ? (
           <div style={{
             display: 'flex',
             flexDirection: isMobile ? 'column' : 'row',
@@ -897,7 +1016,7 @@ const App = () => {
               <BackBtn onClick={() => navigate('/blog')} isMobile={isMobile} />
               <div style={{ fontSize: '20px', lineHeight: '1.6' }}>
                 <h2 style={{ fontSize: '28px', color: isDark ? '#5c7cff' : '#0033cc', marginTop: 0, marginBottom: '16px', borderBottom: `1px solid ${colors.border}`, paddingBottom: '8px' }}>
-                  {currentStory.title}
+                  {currentStory?.title}
                 </h2>
                 <div style={{ 
                   fontSize: '18px', lineHeight: '1.8', textAlign: 'left', backgroundColor: 'rgba(0,0,0,0.02)', padding: '25px', borderRadius: '20px', border: `1px solid ${colors.border}`,
@@ -911,18 +1030,18 @@ const App = () => {
                       >
                         {blogContent}
                       </ReactMarkdown>
-                      {currentStory.video && (
+                      {currentStory?.video && (
                         <div style={{ marginTop: '20px', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
-                          <iframe 
+                          {currentStory?.video && <iframe 
                             width="100%" 
                             height="315" 
-                            src={currentStory.video} 
+                            src={currentStory?.video} 
                             title="YouTube video player" 
                             frameBorder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                             allowFullScreen
                             style={{ display: 'block' }}
-                          ></iframe>
+                          ></iframe>}
                         </div>
                       )}
                     </>
@@ -933,8 +1052,9 @@ const App = () => {
               </div>
             </div>
             <img 
-              src={currentStory.image} 
-              alt={currentStory.title} 
+              src={currentStory?.image} 
+              alt={currentStory?.title} 
+              referrerPolicy="no-referrer"
               style={{ 
                 height: 'auto',
                 maxHeight: isMobile ? '200px' : '400px',
@@ -957,7 +1077,6 @@ const App = () => {
                 backgroundColor: item.color || '#888',
                 border: '4px solid rgba(255,255,255,0.4)',
                 borderRadius: '30px 90px 40px 100px',
-                cursor: PIXEL_HAND,
                 boxShadow: THEME.shadow,
                 transition: THEME.transition,
                 minWidth: '240px',
@@ -985,7 +1104,7 @@ const App = () => {
               <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)', animation: 'glint 6s infinite ease-in-out', pointerEvents: 'none' }} />
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
                 {item.image && (
-                  <img src={item.image} alt="" style={{ height: '64px', borderRadius: '12px', transition: THEME.transition }} />
+                  <img src={item.image} alt="" referrerPolicy="no-referrer" style={{ height: '64px', borderRadius: '12px', transition: THEME.transition }} />
                 )}
                 <span>{item.label}</span>
               </div>
