@@ -94,7 +94,7 @@ const PROJECTS_DATA = {
   rotate: '-5deg',
   items: [
     { label: 'StarCoder', category: 'Web', image: 'https://starcoder.codecosmos.net/logo.png', text: 'A website designed to teach coding in blocks and JavaScript plus sharing and challenges!', link: 'https://starcoder.codecosmos.net' },
-    { label: 'Code Cosmos', category: 'Web', image: 'https://kidvids.codecosmos.net/logo2.png', text: 'The main hub for my network of apps and sites.', link: 'https://codecosmos.net', videoModalUrl: 'https://youtube.com/embed/4kOt-SI_trw' },
+    { label: 'Code Cosmos', category: 'Web', image: 'https://kidvids.codecosmos.net/logo2.png', text: 'The main hub for my network of apps and sites.', link: 'https://codecosmos.net', videoModalUrl: 'https://youtube.com/embed/4kOt-SI_trw', fact: 'Code Cosmos was created on December 20th 2025!' },
     { 
       label: 'KidVids', 
       category: 'Web',
@@ -141,6 +141,19 @@ const PROJECTS_DATA = {
         'https://lh3.googleusercontent.com/d/19ifORTqpr0LWHloP-h7dIRV0t-yXlGMQ',
         'https://lh3.googleusercontent.com/d/16DvsHxQFiRGejvMFLBlYAZ5WfHbdbjWp'
       ]
+    },
+    { 
+      label: 'Toot Rocket', 
+      category: 'Game', 
+      image: 'https://img.magnific.com/premium-vector/fart-svg_1163256-14385.jpg?w=360', 
+      text: "Im serious - who whouldn't want a farting game?" 
+    },
+    {
+      label: '3D Block world',
+      category: 'Game',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Grass_block_stylized.svg/3840px-Grass_block_stylized.svg.png',
+      text: 'A 3D game inspired by Minecraft! Build your dreams! Designed for mobile, not computer.',
+      link: 'https://gemini.google.com/share/ecd3222fefe8'
     }
   ]
 };
@@ -207,7 +220,7 @@ const BackBtn = ({ onClick, isMobile }) => (
   </button>
 );
 
-const SubMenuListView = ({ title, items, icon, rotate, isMobile, onBack, onAction = () => {}, iconMaxHeight = '400px' }) => {
+const SubMenuListView = ({ title, items, icon, rotate, isMobile, onBack, onAction = () => {}, iconMaxHeight = '400px', bonusAction }) => {
   const [activeCategory, setActiveCategory] = React.useState('All');
   
   // Get unique categories from items
@@ -230,7 +243,23 @@ const SubMenuListView = ({ title, items, icon, rotate, isMobile, onBack, onActio
         <div style={{ display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start' }}>
           <BackBtn onClick={onBack} isMobile={isMobile} />
         </div>
-        {title && <h2 style={{ fontSize: isMobile ? '24px' : '32px', color: '#0033cc', marginTop: 0, marginBottom: isMobile ? '10px' : '20px', letterSpacing: '-0.02em', padding: isMobile ? '0 10px' : '0' }}>{title}</h2>}
+        {title && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: isMobile ? '10px' : '20px', justifyContent: isMobile ? 'center' : 'flex-start', flexWrap: 'wrap' }}>
+            <h2 style={{ fontSize: isMobile ? '24px' : '32px', color: '#0033cc', margin: 0, letterSpacing: '-0.02em' }}>{title}</h2>
+            {bonusAction && (
+              <button 
+                onClick={bonusAction}
+                style={{
+                  padding: '6px 16px', backgroundColor: '#FFD700', border: '3px solid #000', borderRadius: '12px',
+                  fontWeight: '900', fontSize: '14px', color: '#000', cursor: FINGER_CLICK, boxShadow: '4px 4px 0 #000',
+                  transition: 'all 0.1s', fontFamily: COMIC_FONT
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1) rotate(5deg)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1) rotate(0deg)'}
+              >BONUS</button>
+            )}
+          </div>
+        )}
         
         {/* Category Filter Bar */}
         {categories.length > 1 && (
@@ -288,6 +317,14 @@ const SubMenuListView = ({ title, items, icon, rotate, isMobile, onBack, onActio
                       style={{ marginLeft: '10px', color: '#FF0000', fontWeight: 'bold', textDecoration: 'underline', fontSize: '14px' }}
                     >
                       video
+                    </span>
+                  )}
+                  {item.fact && (
+                    <span 
+                      onClick={(e) => { e.stopPropagation(); onAction({ type: 'fact', content: item.fact, title: item.label }); }}
+                      style={{ marginLeft: '10px', color: '#6f42c1', fontWeight: 'bold', textDecoration: 'underline', fontSize: '14px' }}
+                    >
+                      fact
                     </span>
                   )}
                   {item.hasScreenshots && (
@@ -447,9 +484,9 @@ const InfoBubble = ({ isVisible, children, isMobile, colors, top = '30px', side 
 // --- Header Component ---
 const HeaderBrandingSnippet = ({ isMobile, colors, isDark, onOpenSettings }) => {
   // Hover states for the different branding items
-  const [codeCosmosHover, setCodeCosmosHover] = React.useState(false);
   const [youtubeHover, setYoutubeHover] = React.useState(false);
   const [githubHover, setGithubHover] = React.useState(false);
+  const [bloggerHover, setBloggerHover] = React.useState(false);
   const [firebaseHover, setFirebaseHover] = React.useState(false);
   const [founderHover, setFounderHover] = React.useState(false);
 
@@ -478,24 +515,6 @@ const HeaderBrandingSnippet = ({ isMobile, colors, isDark, onOpenSettings }) => 
     }}>
       {/* Left Side: Branding & Founder Info */}
       <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '12px' : '24px' }}>
-        {/* Host Branding */}
-        <div 
-          onMouseEnter={() => setCodeCosmosHover(true)}
-          onMouseLeave={() => setCodeCosmosHover(false)}
-          style={{ position: 'relative', display: 'flex', alignItems: 'center' }}
-        >
-          <a href="https://codecosmos.net" style={grayscaleHeaderItem}>
-            <img src="https://kidvids.codecosmos.net/logo2.png" alt="Logo" referrerPolicy="no-referrer" style={{ height: '20px', marginRight: '10px' }} />
-            <span style={{ fontWeight: 500 }}>
-            {isMobile ? "Home" : "Bowie's Official Site"}
-            </span>
-          </a>
-          <InfoBubble isVisible={codeCosmosHover} side="left" isMobile={isMobile} colors={colors}>
-            <p style={{ margin: '0 0 8px 0' }}>Code Cosmos is a network of apps and websites, some connecting to each other, some not. Users sign in to access a variety of services, similar to Google or Apple.</p>
-            <p style={{ margin: 0 }}>Pages are Code Cosmos' service for people that reach out to them, get built websites based on their needs.</p>
-          </InfoBubble>
-        </div>
-
         {/* Founder's Site Tag */}
         <div 
           onMouseEnter={() => setFounderHover(true)}
@@ -506,7 +525,7 @@ const HeaderBrandingSnippet = ({ isMobile, colors, isDark, onOpenSettings }) => 
             {isMobile ? "Founder" : "Founder's Site"}
           </span>
           <InfoBubble isVisible={founderHover} side="left" isMobile={isMobile} colors={colors} width="300px">
-            <p style={{ margin: 0 }}>This website is Bowie's, the creator of Code Cosmos, personal website showcasing his personality and hobbies.</p>
+            <p style={{ margin: 0 }}>This is Bowie's personal website, showcasing his personality and hobbies.</p>
           </InfoBubble>
         </div>
       </div>
@@ -530,23 +549,34 @@ const HeaderBrandingSnippet = ({ isMobile, colors, isDark, onOpenSettings }) => 
         
         {/* YouTube */}
         <div onMouseEnter={() => setYoutubeHover(true)} onMouseLeave={() => setYoutubeHover(false)} style={{ position: 'relative' }}>
-          <a href="https://youtube.com/@CodeCosmos_YT" style={grayscaleHeaderItem}>
+          <a href="https://youtube.com/channel/UC0FhXnvO_n4CZWKxDNHDiQA" style={grayscaleHeaderItem}>
             <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YT" style={{ height: '14px' }} />
           </a>
           <InfoBubble isVisible={youtubeHover} isMobile={isMobile} colors={colors}>
-            <p style={{ margin: '0 0 8px 0' }}>Click to view the Code Cosmos' YouTube channel. We post content about our updates, funny stuff, gaming and all there is to know! Like and subscribe if you enjoyed it!</p>
+            <p style={{ margin: '0 0 8px 0' }}>Click to view my YouTube channel. I post content about my coding projects, funny stuff, gaming and all there is to know! Like and subscribe if you enjoy it!</p>
             <p style={{ margin: 0 }}>YouTube is the world’s largest online video-sharing platform. Owned by Google, it allows billions of users to watch, upload, share, comment on, and interact with videos. It functions as both a social network and the internet's second-largest search engine.</p>
           </InfoBubble>
         </div>
 
         {/* GitHub */}
         <div onMouseEnter={() => setGithubHover(true)} onMouseLeave={() => setGithubHover(false)} style={{ position: 'relative' }}>
-          <a href="https://github.com/The-Code-Cosmos" style={grayscaleHeaderItem}>
+          <a href="https://github.com/BowieP" style={grayscaleHeaderItem}>
             <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" style={{ height: '16px' }} />
           </a>
           <InfoBubble isVisible={githubHover} isMobile={isMobile} colors={colors}>
-            <p style={{ margin: '0 0 8px 0' }}>Click to view the Code Cosmos' GitHub profile where we showcase our code, repositories, and gists. Star and follow if you enjoyed it!</p>
+            <p style={{ margin: '0 0 8px 0' }}>Click to view my GitHub profile where I showcase my code, repositories, and gists. Star my projects and follow me if you like what you see!</p>
             <p style={{ margin: 0 }}>GitHub is a cloud-based platform and hosting service where developers store, manage, and collaborate on software code. It acts like Google Drive for code, but is uniquely built to track file changes and help multiple people work on the same project at the same time without overwriting each other's work.</p>
+          </InfoBubble>
+        </div>
+
+        {/* Blogger */}
+        <div onMouseEnter={() => setBloggerHover(true)} onMouseLeave={() => setBloggerHover(false)} style={{ position: 'relative' }}>
+          <a href="https://bowies-backpack.blogspot.com" target="_blank" rel="noopener noreferrer" style={grayscaleHeaderItem}>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Blogger.svg" alt="Blogger" style={{ height: '16px' }} />
+          </a>
+          <InfoBubble isVisible={bloggerHover} isMobile={isMobile} colors={colors}>
+            <p style={{ margin: '0 0 8px 0' }}>Click to check out my blog! I write about my adventures, thoughts, and things I'm learning.</p>
+            <p style={{ margin: 0 }}>Blogger is a blog-publishing service that allows multi-user blogs with time-stamped entries. It was developed by Pyra Labs, which was bought by Google in 2003.</p>
           </InfoBubble>
         </div>
 
@@ -815,7 +845,7 @@ const App = () => {
 
         <div style={{ display: 'flex', gap: isMobile ? '8px' : '16px' }}>
           <a 
-            href="https://youtube.com/@CodeCosmos_YT" 
+            href="https://youtube.com/channel/UC0FhXnvO_n4CZWKxDNHDiQA" 
             target="_blank" 
             rel="noopener noreferrer"
             style={{
@@ -833,7 +863,7 @@ const App = () => {
           </a>
 
           <a 
-            href="https://github.com/The-Code-Cosmos" 
+            href="https://github.com/BowieP" 
             target="_blank" 
             rel="noopener noreferrer"
             style={{
@@ -849,6 +879,24 @@ const App = () => {
             <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" style={{ height: '18px', filter: 'invert(1)' }} />
             {!isMobile && "GitHub"}
           </a>
+
+          <a 
+            href="https://sites.google.com/view/bowiep-links" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{
+              display: 'flex', alignItems: 'center', gap: '8px', padding: isMobile ? '6px 12px' : '8px 20px',
+              backgroundColor: '#4CAF50', color: '#fff', borderRadius: '10px', border: '3px solid rgba(255,255,255,0.3)',
+              textDecoration: 'none', fontSize: '14px', fontWeight: 'bold', cursor: FINGER_CLICK, boxShadow: THEME.shadow, transition: THEME.transition
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-6px) rotate(2deg)'; e.currentTarget.style.boxShadow = THEME.shadowHover; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0) rotate(0deg)'; e.currentTarget.style.boxShadow = THEME.shadow; }}
+            onMouseDown={(e) => { e.currentTarget.style.transform = 'translateY(12px)'; e.currentTarget.style.boxShadow = THEME.shadowActive; }}
+            onMouseUp={(e) => { e.currentTarget.style.transform = 'translateY(-6px) rotate(2deg)'; e.currentTarget.style.boxShadow = THEME.shadowHover; }}
+          > 
+            <span style={{ fontSize: '20px', lineHeight: '1' }}>+</span>
+            {!isMobile && "More Links"}
+          </a> 
         </div>
       </div>
 
@@ -894,6 +942,12 @@ const App = () => {
             isMobile={isMobile} 
             onBack={() => navigate('/')} 
             onAction={setModalData}
+            bonusAction={() => setModalData({
+              type: 'bonus',
+              title: 'Source Code',
+              content: 'Are you a CODER? Well click here to see the code of this website behind the scenes!',
+              link: 'https://github.com/BowieP/bowies-website'
+            })}
           />
         ) : currentPath === '/blog' ? (
           <div style={{
@@ -951,6 +1005,24 @@ const App = () => {
                   </div>
                 </button>
               ))}
+              {/* Blogspot Embed Section */}
+              <div style={{
+                width: '100%',
+                marginTop: '30px',
+              }}> 
+                <h3 style={{ color: '#0033cc', marginBottom: '15px', fontSize: '24px', textAlign: 'center' }}>More on my Blogspot!</h3>
+                <iframe
+                  src="https://bowies-backpack.blogspot.com/"
+                  style={{
+                    width: '100%',
+                    height: isMobile ? '60vh' : '800px',
+                    border: `3px solid ${colors.border}`,
+                    borderRadius: '20px',
+                    boxShadow: THEME.shadow
+                  }}
+                  title="Bowie's Blogspot"
+                ></iframe>
+              </div>
             </div>
           </div>
         ) : currentPath === '/settings' ? (
@@ -1184,6 +1256,30 @@ const App = () => {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
             allowFullScreen style={{ display: 'block', borderRadius: '12px' }}
           />
+        ) : modalData?.type === 'fact' ? (
+          <div style={{ textAlign: 'center', padding: '20px', fontFamily: COMIC_FONT }}>
+            <p style={{ fontSize: '22px', color: '#333', marginBottom: '10px', lineHeight: '1.4' }}>
+              {modalData.content}
+            </p>
+          </div>
+        ) : modalData?.type === 'bonus' ? (
+          <div style={{ textAlign: 'center', padding: '20px', fontFamily: COMIC_FONT }}>
+            <p style={{ fontSize: '22px', color: '#333', marginBottom: '25px', lineHeight: '1.4' }}>
+              {modalData.content}
+            </p>
+            <a 
+              href={modalData.link} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-block', padding: '15px 35px', backgroundColor: '#0033cc', color: '#fff',
+                textDecoration: 'none', borderRadius: '15px', fontWeight: 'bold', fontSize: '20px',
+                boxShadow: '0 8px 0 #002288', transition: 'all 0.1s'
+              }}
+              onMouseDown={(e) => { e.currentTarget.style.transform = 'translateY(4px)'; e.currentTarget.style.boxShadow = '0 4px 0 #002288'; }}
+              onMouseUp={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 0 #002288'; }}
+            >Click Here!</a>
+          </div>
         ) : (
           <div style={{ textAlign: 'center', padding: '10px 0', overflowY: 'auto', maxHeight: '60vh' }}>
             {modalData?.screenshots && modalData.screenshots.length > 0 ? (
